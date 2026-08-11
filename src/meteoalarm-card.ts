@@ -4,7 +4,6 @@ import {
 	EntityConfig,
 	handleAction,
 	hasAction,
-	hasConfigOrEntityChanged,
 	HomeAssistant,
 	LovelaceCardConfig,
 	LovelaceCardEditor,
@@ -52,6 +51,7 @@ export class MeteoalarmCard extends LitElement {
 	@property({ attribute: false }) public hass!: HomeAssistant;
 
 	@state() private config!: MeteoalarmCardConfig;
+	private entityIds: string[] = [];
 
 	private resizeObserver!: ResizeObserver;
 
@@ -113,6 +113,8 @@ export class MeteoalarmCard extends LitElement {
 			name: 'Meteoalarm',
 			...config,
 		};
+
+		this.entityIds = processConfigEntities(this.config.entities!).map((e) => e.entity);
 	}
 
 	static get styles(): CSSResultGroup {
@@ -124,7 +126,18 @@ export class MeteoalarmCard extends LitElement {
 	}
 
 	protected shouldUpdate(changedProps: PropertyValues): boolean {
-		return hasConfigOrEntityChanged(this, changedProps, false);
+		if (changedProps.has('config')) return true;
+
+		if (changedProps.has('hass')) {
+			const oldHass = changedProps.get('hass') as HomeAssistant | undefined;
+			if (!oldHass) return true;
+
+			return this.entityIds.some(
+				(id) => oldHass.states[id] !== this.hass.states[id]
+			);
+		}
+
+		return false;
 	}
 
 	public firstUpdated(): void {
