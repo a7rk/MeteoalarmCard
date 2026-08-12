@@ -502,16 +502,18 @@ export class MeteoalarmCard extends LitElement {
 				console.log(
 					'MeteoalarmCard: Card is hidden - hide_when_no_warning is enabled and there are no warnings',
 				);
+				this.hidden = true;
 				this.setCardMargin(false);
 				return html``;
 			}
+
+			this.hidden = false;
+			this.setCardMargin(true);
 
 			// if 'chip' display, render chip instead
 			if (this.cardStyle === MeteoalarmCardStyle.Chip) {
 				return this.renderChip(events);
 			}
-
-			this.setCardMargin(true);
 
 			return html`
 				<ha-card
@@ -572,7 +574,14 @@ export class MeteoalarmCard extends LitElement {
 
 	private renderChip(events: MeteoalarmAlertParsed[]): TemplateResult {
 		const topEvent = events[0];
-		if (!topEvent?.isActive && this.config.hide_when_no_warning) return html``;
+		// if (!topEvent?.isActive && this.config.hide_when_no_warning) {
+		// 	this.hidden = true;
+  		// 	this.setCardMargin(false);
+		// 	return html``;
+		// }
+
+		this.hidden = false;
+		this.setCardMargin(true);
 
 		this.currentEntity = topEvent?.entity?.entity_id;
 
