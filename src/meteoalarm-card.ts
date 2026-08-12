@@ -588,10 +588,14 @@ export class MeteoalarmCard extends LitElement {
 				>
 					${this.renderChipIcon(topEvent.icon)}
 					<div class="chip-text">
-						${topEvent.caption && topEvent.captionIcon
+						${topEvent.caption && topEvent.captionSuffixIcon
 							? html`
 									<div class="caption">
-										${this.renderCaption(topEvent.captionIcon, topEvent.caption)}
+										${this.renderCaption(
+											topEvent.captionPrefixText,
+											topEvent.captionSuffixIcon,
+											topEvent.caption
+										)}
 									</div>
 								`
 							: ''}
