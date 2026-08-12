@@ -13,6 +13,7 @@ import {
 	MeteoalarmIntegrationEntityType,
 	MeteoalarmScalingMode,
 	WarningRule,
+	MeteoalarmCardStyle,
 } from './types';
 
 @customElement('meteoalarm-card-editor')
@@ -40,24 +41,150 @@ export class MeteoalarmCardCardEditor extends LitElement implements LovelaceCard
 		}
 	}
 
+	get _card_style(): string {
+		return this._config?.card_style || 'card';
+	}
+
+	get _color_mode(): string {
+		return this._config?.color_mode || 'background';
+	}
+
+	get _card_style(): string {
+		return this._config?.card_style || 'card';
+	}
+
+	get _color_mode(): string {
+		return this._config?.color_mode || 'background';
+	}
+
 	protected render(): TemplateResult {
 		if (!this.hass || !this.config) {
 			return html``;
 		}
 
 		return html`
-			<ha-form
-				.hass=${this.hass}
-				.data=${this.formData}
-				.schema=${this.schema}
-				.warning=${this.warning}
-				.computeLabel=${this.computeLabel}
-				.computeHelper=${this.computeHelper}
-				.computeWarning=${this.computeWarning}
-				@value-changed=${this.valueChanged}
-			></ha-form>
-			${
-				this.integration
+			<!-- Warnings-->
+			${generateEditorWarnings(integration, this._configEntities)}
+
+			<!-- Card style select -->
+			<div class="options">
+				<div>
+					<mwc-select
+						naturalMenuWidth
+						fixedMenuPosition
+						label=${`${localize('editor.card_style')}`}
+						.configValue=${'card_style'}
+						.value=${this._card_style}
+						@selected=${this._valueChanged}
+						@closed=${(ev) => ev.stopPropagation()}
+					>
+						${Object.values(MeteoalarmCardStyle).map((mode) => {
+							return html` <mwc-list-item .value=${mode}>
+								${localize(`editor.card_style_options.${mode}`)}
+							</mwc-list-item>`;
+						})}
+					</mwc-select>
+				</div>
+			</div>
+
+			<!-- Integration select -->
+			<mwc-select
+				naturalMenuWidth
+				fixedMenuPosition
+				label=${`${localize('editor.integration')} (${localize('editor.required')})`}
+				.configValue=${'integration'}
+				.value=${this._integration}
+				@selected=${this._valueChanged}
+				@closed=${(ev) => ev.stopPropagation()}
+			>
+				${MeteoalarmCard.integrations.map((integration) => {
+					return html`<mwc-list-item .value=${integration.metadata.key}
+						>${integration.metadata.name}</mwc-list-item
+					>`;
+				})}
+			</mwc-select>
+
+			<!-- Entity selector -->
+			${integration?.metadata.type == MeteoalarmIntegrationEntityType.SingleEntity
+				? html`
+						<ha-entity-picker
+							label=${`${localize('editor.entity')} (${localize('editor.required')})`}
+							allow-custom-entity
+							hideClearIcon
+							.hass=${this.hass}
+							.configValue=${'entities'}
+							.value=${(this._configEntities?.length || 0) > 0
+								? this._configEntities![0].entity
+								: ''}
+							@value-changed=${this._valueChanged}
+						></ha-entity-picker>
+				  `
+				: html`
+						<h3>${localize('editor.entity')} (${localize('editor.required')})</h3>
+						<p>
+							${localize('editor.description.start')} ${' '}
+							${integration?.metadata.type == MeteoalarmIntegrationEntityType.CurrentExpected
+								? html`
+					${localize('editor.description.current_expected')}</p>
+				`
+								: ''}
+							${integration?.metadata.type == MeteoalarmIntegrationEntityType.Slots
+								? html`
+					${localize('editor.description.slots')}</p>
+				`
+								: ''}
+							${integration?.metadata.type ==
+							MeteoalarmIntegrationEntityType.WarningWatchStatementAdvisory
+								? html`
+					${localize('editor.description.warning_watch_statement_advisory')}</p>
+				`
+								: ''}
+							${integration?.metadata.type == MeteoalarmIntegrationEntityType.SeparateEvents
+								? html`
+					${localize('editor.description.separate_events')}</p>
+				`
+								: ''}
+							${' '} ${localize('editor.description.end')}
+						</p>
+
+						<hui-entity-editor
+							.label=${' '}
+							.hass=${this.hass}
+							.entities=${this._configEntities}
+							@entities-changed=${this._entitiesChanged}
+						></hui-entity-editor>
+				  `}
+
+			<!-- Switches section -->
+			<div class="options">
+				<!-- Disable slider -->
+				${integration?.metadata.returnMultipleAlerts
+					? html`
+							<mwc-formfield .label=${localize('editor.disable_swiper')}>
+								<mwc-switch
+									.checked=${this._disable_swiper !== false}
+									.configValue=${'disable_swiper'}
+									@change=${this._valueChanged}
+								></mwc-switch>
+							</mwc-formfield>
+					  `
+					: ''}
+
+				<!-- Override headline -->
+				${integration?.metadata.returnHeadline
+					? html`
+							<mwc-formfield .label=${localize('editor.override_headline')}>
+								<mwc-switch
+									.checked=${this._override_headline !== false}
+									.configValue=${'override_headline'}
+									@change=${this._valueChanged}
+								></mwc-switch>
+							</mwc-formfield>
+					  `
+					: ''}
+
+				<!-- Hide caption -->
+				${integration?.metadata.type == MeteoalarmIntegrationEntityType.CurrentExpected
 					? html`
 							<a
 								class="docs-link"
