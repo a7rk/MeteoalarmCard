@@ -175,7 +175,6 @@ export default css`
 		display: flex;
 		flex-direction: column;
 		overflow: hidden;
-		line-height: 1.15;
 		justify-content: center;
 		padding-right: 4px;
 		padding-inline-end: 4px;
@@ -183,18 +182,18 @@ export default css`
 	}
 
 	.chip-headline {
-		font-size: 12px;
-		font-weight: 500;
-		line-height: 16px;
+		font-size: var(--ha-font-size-s, 12px);
+		font-weight: var(--ha-font-size-medium, 500);
 		letter-spacing: 0.1px;
+		line-height: var(--ha-line-height-condensed, 1.2);
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
 	}
 
 	.chip-caption {
-		font-size: 10px;
-		font-weight: 500;
+		font-size: var(--ha-font-size-xs, 10px);
+		font-weight: var(--ha-font-size-medium, 500);
 		line-height: 10px;
 		letter-spacing: 0.1px;
 		overflow: hidden;
