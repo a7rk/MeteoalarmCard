@@ -200,7 +200,7 @@ export default css`
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
-		opacity: 0.8;
+		opacity: 0.65;
 	}
 
 	.chip.event-yellow {
