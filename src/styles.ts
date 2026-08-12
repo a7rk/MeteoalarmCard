@@ -132,4 +132,77 @@ export default css`
 	.swiper-pagination-bullet-active {
 		background-color: #ffffff;
 	}
+
+	.chip-card {
+		flex: 0 0 auto;
+		width: fit-content;
+		border-radius: 999px;
+		box-shadow: none; /* or a lighter one if you want the badge elevation */
+		background: var(--ha-card-background, var(--card-background-color));
+	}
+
+	.chip {
+		display: inline-flex;
+		align-items: center;
+  		align-self: flex-start;
+		width: fit-content;
+		height: 36px;
+		box-sizing: border-box;
+		gap: 8px;
+		padding: 0px 8px;
+		border-radius: 999px;
+		cursor: pointer;
+		color: var(--text-color);
+		max-width: 260px;
+	}
+
+	.chip-icon {
+		--mdc-icon-size: 18px;
+		width: 18px;
+		height: 18px;
+		line-height: 0;
+		display: flex;
+		align-items: center;
+		align-self: center;
+		justify-content: center;
+		flex: 0 0 auto;
+		margin: 0;
+	}
+
+	.chip-text {
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+		line-height: 1.15;
+		justify-content: center;
+	}
+
+	.chip-headline {
+		font-size: 12px;
+		font-weight: 500;
+		line-height: 16px;
+		letter-spacing: 0.1px;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+
+	.chip-caption {
+		font-size: 10px;
+		font-weight: 500;
+		line-height: 10px;
+		letter-spacing: 0.1px;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+
+	.chip.event-yellow {
+		color: rgba(0, 0, 0, 0.8);
+	}
+
+	.chip.event-yellow .chip-caption {
+		color: rgba(0, 0, 0, 0.5);
+	}
+
 `;

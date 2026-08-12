@@ -18,6 +18,7 @@
     "missing_entity": "Podanie encji jest wymagane!",
     "invalid_integration": "Nieprawidłowa integracja!",
     "invalid_scaling_mode": null,
+    "invalid_card_style": null,
     "entity_invalid": {
       "single": "Wybrana integracja nie opdowiada wybranej encji.",
       "multiple": "Wybrana integracja nie odpowiada wybranym encjom: {entity}."
@@ -51,6 +52,11 @@
       "headline": "Tylko Nagłówek",
       "scale": "Tylko Skala",
       "headline_and_scale": "Nagłówek i skala"
+    },
+    "card_style": null,
+    "card_style_options": {
+      "card": null,
+      "chip": null
     },
     "show_warning_times": "Pokaż godziny ostrzeżeń"
   },

@@ -18,6 +18,7 @@
     "missing_entity": "Specifying entities is required!",
     "invalid_integration": "This integration is not valid!",
     "invalid_scaling_mode": "This scaling mode is not valid!",
+    "invalid_card_style": "This card style is not valid!",
     "entity_invalid": {
       "single": "Selected integration doesn't match selected entity.",
       "multiple": "Selected integration doesn't match selected entities: {entity}."
@@ -51,6 +52,11 @@
       "headline": "Headline Only",
       "scale": "Scale Only",
       "headline_and_scale": "Headline and scale"
+    },
+    "card_style": "Card Layout",
+    "card_style_options": {
+      "card": "Card",
+      "chip": "Chip"
     },
     "show_warning_times": "Show warning times"
   },

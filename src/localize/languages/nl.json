@@ -18,6 +18,7 @@
     "missing_entity": "Het specificeren van de entiteit is vereist!",
     "invalid_integration": "Deze integratie is niet geldig!",
     "invalid_scaling_mode": "Deze schalings modus is niet geldig!",
+    "invalid_card_style": null,
     "entity_invalid": {
       "single": "De geselecteerde integratie komt niet overeen met de geselecteerde entiteit.",
       "multiple": "De geselecteerde integratie komt niet overeen met de geselecteerde entiteiten: {entity}."
@@ -51,6 +52,11 @@
       "headline": "Alleen koptekst",
       "scale": "Alleen schalen",
       "headline_and_scale": "Koptekst en schalen"
+    },
+    "card_style": null,
+    "card_style_options": {
+      "card": null,
+      "chip": null
     },
     "show_warning_times": "Waarschuwingstijden weergeven"
   },

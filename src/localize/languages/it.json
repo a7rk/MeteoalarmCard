@@ -18,6 +18,7 @@
     "missing_entity": "È necessario specificare un'entità!",
     "invalid_integration": "Questa integrazione non è valida!",
     "invalid_scaling_mode": null,
+    "invalid_card_style": null,
     "entity_invalid": {
       "single": "L'integrazione selezionata non corrisponde all'entità selezionata.",
       "multiple": "L'integrazione selezionata non corrisponde alle entità selezionate: {entity}."
@@ -51,6 +52,11 @@
       "headline": null,
       "scale": null,
       "headline_and_scale": null
+    },
+    "card_style": null,
+    "card_style_options": {
+      "card": null,
+      "chip": null
     },
     "show_warning_times": "Mostra orari degli avvisi"
   },

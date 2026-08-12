@@ -18,6 +18,7 @@
     "missing_entity": "Az entitások megadása kötelező!",
     "invalid_integration": "Ez az integráció nem érvényes!",
     "invalid_scaling_mode": "Ez a méretezési mód nem érvényes!",
+    "invalid_card_style": null,
     "entity_invalid": {
       "single": "A kiválasztott integráció nem egyezik a kiválasztott entitással.",
       "multiple": "A kiválasztott integráció nem egyezik a kiválasztott entitásokkal: {entity}."
@@ -51,6 +52,11 @@
       "headline": "Csak címsor",
       "scale": "Csak méretezés",
       "headline_and_scale": "Címsor és méretezés"
+    },
+    "card_style": null,
+    "card_style_options": {
+      "card": null,
+      "chip": null
     },
     "show_warning_times": "Figyelmeztetési idők megjelenítése"
   },
