@@ -588,14 +588,13 @@ export class MeteoalarmCard extends LitElement {
 				>
 					${this.renderChipIcon(topEvent.icon)}
 					<div class="chip-text">
-						${topEvent.caption && topEvent.captionSuffixIcon
+						${topEvent.caption
 							? html`
-									<div class="caption">
-										${this.renderCaption(
-											topEvent.captionPrefixText,
-											topEvent.captionSuffixIcon,
-											topEvent.caption
-										)}
+									<div class="chip-caption">
+											${topEvent.captionPrefixText ? 
+												`${topEvent.captionPrefixText} ` : ''
+											}
+                  							${topEvent.caption}
 									</div>
 								`
 							: ''}
@@ -655,33 +654,29 @@ export class MeteoalarmCard extends LitElement {
 
 	// no icon on 'chip' style cards
 	private renderCaption(
-	prefixText: string | undefined,
-	caption: string,
-	suffixIcon: string | undefined,
-): TemplateResult {
-	return html`
-		${prefixText
-			? html`
-					<span class="caption-text caption-prefix">${prefixText}&nbsp;</span>
-			  `
-			: ''}
-
-		<span class="caption-text">${caption}</span>
-
-		${suffixIcon
-			? html`
-					${this.cardStyle !== MeteoalarmCardStyle.Chip ?
-				html`
-					<ha-icon
-								class="caption-icon caption-icon-suffix"
-								icon="mdi:${suffixIcon}"
-							></ha-icon>
-			  `
-			: ''}
+		prefixText: string | undefined,
+		caption: string,
+		suffixIcon: string | undefined,
+	): TemplateResult {
+		return html`
+			${prefixText
+				? html`
+						<span class="caption-text caption-prefix">${prefixText}&nbsp;</span>
 				`
+				: ''}
+
+			<span class="caption-text">${caption}</span>
+
+			${suffixIcon
+				? html`
+						<ha-icon
+							class="caption-icon caption-icon-suffix"
+							icon="mdi:${suffixIcon}"
+						></ha-icon>
+					`
 			: ''}
-	`;
-}
+		`;
+	}
 
 	private setCardMargin(showMargin: boolean): void {
 		const container = this.shadowRoot?.host as HTMLElement;
