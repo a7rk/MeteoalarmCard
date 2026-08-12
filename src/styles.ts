@@ -136,6 +136,8 @@ export default css`
 	.chip-card {
 		flex: 0 0 auto;
 		width: fit-content;
+		height: 36px;
+		box-sizing: border-box;
 		border-radius: 999px;
 		box-shadow: none; /* or a lighter one if you want the badge elevation */
 		background: var(--ha-card-background, var(--card-background-color));
@@ -175,6 +177,9 @@ export default css`
 		overflow: hidden;
 		line-height: 1.15;
 		justify-content: center;
+		padding-right: 4px;
+		padding-inline-end: 4px;
+		padding-inline-start: initial;
 	}
 
 	.chip-headline {
@@ -195,14 +200,11 @@ export default css`
 		overflow: hidden;
 		white-space: nowrap;
 		text-overflow: ellipsis;
+		opacity: 0.8;
 	}
 
 	.chip.event-yellow {
 		color: rgba(0, 0, 0, 0.8);
-	}
-
-	.chip.event-yellow .chip-caption {
-		color: rgba(0, 0, 0, 0.5);
 	}
 
 `;
