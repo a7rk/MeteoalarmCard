@@ -15,6 +15,7 @@ import {
 	MeteoalarmCardConfig,
 	MeteoalarmIntegrationEntityType,
 	MeteoalarmScalingMode,
+	MeteoalarmCardStyle,
 } from './types';
 
 @customElement('meteoalarm-card-editor')
@@ -75,6 +76,14 @@ export class MeteoalarmCardCardEditor
 		return this._config?.scaling_mode || 'headline_and_scale';
 	}
 
+	get _card_style(): string {
+		return this._config?.card_style || 'card';
+	}
+
+	get _color_mode(): string {
+		return this._config?.color_mode || 'background';
+	}
+
 	protected render(): TemplateResult | void {
 		if (!this.hass) {
 			return html``;
@@ -87,6 +96,27 @@ export class MeteoalarmCardCardEditor
 		return html`
 			<!-- Warnings-->
 			${generateEditorWarnings(integration, this._configEntities)}
+
+			<!-- Card style select -->
+			<div class="options">
+				<div>
+					<mwc-select
+						naturalMenuWidth
+						fixedMenuPosition
+						label=${`${localize('editor.card_style')}`}
+						.configValue=${'card_style'}
+						.value=${this._card_style}
+						@selected=${this._valueChanged}
+						@closed=${(ev) => ev.stopPropagation()}
+					>
+						${Object.values(MeteoalarmCardStyle).map((mode) => {
+							return html` <mwc-list-item .value=${mode}>
+								${localize(`editor.card_style_options.${mode}`)}
+							</mwc-list-item>`;
+						})}
+					</mwc-select>
+				</div>
+			</div>
 
 			<!-- Integration select -->
 			<mwc-select

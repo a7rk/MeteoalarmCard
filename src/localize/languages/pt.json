@@ -14,6 +14,7 @@
     "missing_entity": "É necessário especificar a entidade!",
     "invalid_integration": "A integração não é válida!",
     "invalid_scaling_mode": null,
+    "invalid_card_style": null,
     "entity_invalid": {
       "single": "A integração seleccionada não conincide com a entidade seleccionada.",
       "multiple": "A integração seleccionada não conincide com as entidades seleccionadas: {entity}."
@@ -47,6 +48,11 @@
       "headline": null,
       "scale": null,
       "headline_and_scale": null
+    },
+    "card_style": null,
+    "card_style_options": {
+      "card": null,
+      "chip": null
     }
   },
   "events": {

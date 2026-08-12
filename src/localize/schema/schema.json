@@ -70,6 +70,7 @@
                 "missing_entity",
                 "invalid_integration",
                 "invalid_scaling_mode",
+                "invalid_card_style",
                 "entity_invalid"
             ],
             "properties": {
@@ -83,6 +84,10 @@
                 },
                 "invalid_scaling_mode": {
                     "$id": "#/properties/error/properties/invalid_scaling_mode",
+                    "type": ["string", "null"]
+                },
+                "invalid_card_style": {
+                    "$id": "#/properties/error/properties/invalid_card_style",
                     "type": ["string", "null"]
                 },
                 "entity_invalid": {
@@ -122,7 +127,9 @@
                 "description",
                 "error",
                 "scaling_mode",
-                "scaling_mode_options"
+                "scaling_mode_options",
+                "card_style",
+                "card_style_options"
             ],
             "properties": {
                 "entity": {
@@ -248,6 +255,29 @@
                         },
                         "headline_and_scale": {
                             "$id": "#/properties/editor/properties/scaling_mode_options/properties/headline_and_scale",
+                            "type": ["string", "null"]
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "card_style": {
+                    "$id": "#/properties/editor/properties/card_style",
+                    "type": ["string", "null"]
+                },
+                "card_style_options": {
+                    "$id": "#/properties/editor/properties/card_style_options",
+                    "type": "object",
+                    "required": [
+                        "card",
+                        "chip"
+                    ],
+                    "properties": {
+                        "card": {
+                            "$id": "#/properties/editor/properties/scaling_mode_options/properties/card",
+                            "type": ["string", "null"]
+                        },
+                        "chip": {
+                            "$id": "#/properties/editor/properties/scaling_mode_options/properties/chip",
                             "type": ["string", "null"]
                         }
                     },

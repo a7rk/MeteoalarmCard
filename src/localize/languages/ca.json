@@ -14,6 +14,7 @@
     "missing_entity": "Cal especificar les entitats!",
     "invalid_integration": "Aquesta integració no és vàlida!",
     "invalid_scaling_mode": "Aquest mode d'escalat no és vàlid!",
+    "invalid_card_style": null,
     "entity_invalid": {
       "single": "La integració seleccionada no coincideix amb l'entitat seleccionada.",
       "multiple": "La integració seleccionada no coincideix amb les entitats seleccionades: {entity}."
@@ -47,6 +48,11 @@
       "headline": "Només títol",
       "scale": "Només escala",
       "headline_and_scale": "Títol i escala"
+    },
+    "card_style": null,
+    "card_style_options": {
+      "card": null,
+      "chip": null
     }
   },
   "events": {
