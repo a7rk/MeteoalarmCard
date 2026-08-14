@@ -707,8 +707,9 @@ export class MeteoalarmCard extends LitElement {
 	private handleAction(ev: ActionHandlerEvent): void {
 		const config = {
 			...this.config,
-			entity: this.currentEntity,
+			entity: this.integration.getActionEntities ? undefined : this.currentEntity,
 		};
+		
 		if (this.hass && this.config && ev.detail.action) {
 			handleAction(this, this.hass, config, ev.detail.action);
 		}
