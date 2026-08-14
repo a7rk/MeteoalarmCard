@@ -580,10 +580,28 @@ export class MeteoalarmCard extends LitElement {
 	private handleAction(ev: ActionHandlerEvent): void {
 		const config = {
 			...this.config,
-			entity: this.currentEntity,
+			entity: this.integration.getActionEntities 
+				? this.triggerEntityId()
+				: this.integration.getActionEntities ? undefined : this.currentEntity,
 		};
+		
 		if (this.hass && this.config && ev.detail.action) {
 			handleAction(this, this.hass, config, ev.detail.action);
 		}
+	}
+
+	private triggerEntityId(): string | undefined {
+		const kind = this.actionEntities?.find((e) => e.entity_id === this.currentEntity)
+			?.attributes.warning_kind as 'active' | 'advance' | undefined;
+
+		if (!kind) return undefined;
+
+		const configuredEntity = processConfigEntities(this.config.entities!)[0]?.entity;
+		if (!configuredEntity) return undefined;
+
+		// Both sensors follow the same naming convention as the virtual entities
+		// (`_active_` / `_advance_`), so derive the id for the shown slide's kind
+		// from whichever one the user configured.
+		return configuredEntity.replace(/_(active|advance)_/, `_${kind}_`);
 	}
 }
