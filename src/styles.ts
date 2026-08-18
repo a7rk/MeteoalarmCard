@@ -136,7 +136,7 @@ export default css`
 	.chip {
 		display: inline-flex;
 		align-items: center;
-  		align-self: flex-start;
+		align-self: flex-start;
 		width: fit-content;
 		height: 36px;
 		box-sizing: border-box;
@@ -197,4 +197,7 @@ export default css`
 		color: rgba(0, 0, 0, 0.8);
 	}
 
+	.chip.event-yellow .chip-caption {
+		color: rgba(0, 0, 0, 0.5);
+	}
 `;

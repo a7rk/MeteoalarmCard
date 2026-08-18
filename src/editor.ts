@@ -228,6 +228,19 @@ export class MeteoalarmCardCardEditor extends LitElement implements LovelaceCard
 			selector: { entity: isSingleEntity(integration) ? {} : { multiple: true } },
 		});
 
+		schema.push({
+			name: 'card_style',
+			selector: {
+				select: {
+					mode: 'dropdown',
+					options: Object.values(MeteoalarmCardStyle).map((mode) => ({
+						value: mode,
+						label: localize(`editor.card_style_options.${mode}`),
+					})),
+				},
+			},
+		});
+
 		const switches: HaFormSchema[] = [];
 		if (integration.metadata.returnMultipleAlerts) {
 			switches.push({ name: 'disable_swiper', selector: { boolean: {} } });

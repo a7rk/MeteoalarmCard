@@ -30,7 +30,6 @@ import {
 	MeteoalarmIntegrationEntityType,
 	MeteoalarmScalingMode,
 	MeteoalarmCardStyle,
-	MeteoalarmColorMode,
 	MeteoalarmAlertParsed,
 } from './types';
 
@@ -125,7 +124,7 @@ export class MeteoalarmCard extends LitElement {
 	public getCardSize(): number {
 		// Prevent over-allocating space for 'chip'
 		if (this.cardStyle === MeteoalarmCardStyle.Chip) return 1;
-				
+
 		return 2;
 	}
 
@@ -141,7 +140,7 @@ export class MeteoalarmCard extends LitElement {
 	public firstUpdated(): void {
 		// skip if 'chip' display
 		if (this.cardStyle === MeteoalarmCardStyle.Chip) return;
-		
+
 		this.measureCard();
 		this.attachObserver();
 		const swiper = (this.renderRoot as ShadowRoot).getElementById('swiper');
@@ -170,7 +169,7 @@ export class MeteoalarmCard extends LitElement {
 	private attachObserver() {
 		// skip if 'chip' display
 		if (this.cardStyle === MeteoalarmCardStyle.Chip) return;
-		
+
 		if (!this.resizeObserver) {
 			this.resizeObserver = new ResizeObserver(() => this.measureCard());
 		}
@@ -193,7 +192,7 @@ export class MeteoalarmCard extends LitElement {
 	private measureCard() {
 		// skip if 'chip' display
 		if (this.cardStyle === MeteoalarmCardStyle.Chip) return;
-		
+
 		if (!this.isConnected) return;
 		const card = this.shadowRoot!.querySelector('ha-card');
 		if (!card) return;
@@ -411,20 +410,22 @@ export class MeteoalarmCard extends LitElement {
 		return html`
 			<ha-card class="chip-card">
 				<div
-				class="chip ${topEvent?.cssClass ?? 'event-none'}"
-				@action=${this.handleAction}
-				.actionHandler=${actionHandler({ hasHold: hasAction(this.config.hold_action) })}
-				tabindex="0"
+					class="chip ${topEvent?.cssClass ?? 'event-none'}"
+					@action=${this.handleAction}
+					.actionHandler=${actionHandler({ hasHold: hasAction(this.config.hold_action) })}
+					tabindex="0"
 				>
 					${this.renderChipIcon(topEvent.icon)}
 					<div class="chip-text">
-						${topEvent.caption && topEvent.captionIcon
-							? html`
-									<div class="caption">
-										${this.renderCaption(topEvent.captionIcon, topEvent.caption)}
-									</div>
-								`
-							: ''}
+						${
+							topEvent.caption && topEvent.captionIcon
+								? html`
+										<div class="caption">
+											${this.renderCaption(topEvent.captionIcon, topEvent.caption)}
+										</div>
+									`
+								: ''
+						}
 						<div class="chip-headline">${narrowHeadline}</div>
 					</div>
 				</div>
@@ -483,14 +484,16 @@ export class MeteoalarmCard extends LitElement {
 	private renderCaption(icon: string, caption: string): TemplateResult {
 		return html`
 			<span class="caption-text">${caption}</span>
-			${this.cardStyle !== MeteoalarmCardStyle.Chip ?
-				html`
-					<ha-icon
-						class="caption-icon"
-						icon="mdi:${icon}"
-					></ha-icon>
-				`
-			: ''}
+			${
+				this.cardStyle !== MeteoalarmCardStyle.Chip
+					? html`
+							<ha-icon
+								class="caption-icon"
+								icon="mdi:${icon}"
+							></ha-icon>
+						`
+					: ''
+			}
 		`;
 	}
 
