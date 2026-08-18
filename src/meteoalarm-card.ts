@@ -30,6 +30,9 @@ import {
 	MeteoalarmIntegration,
 	MeteoalarmIntegrationEntityType,
 	MeteoalarmScalingMode,
+	MeteoalarmCardStyle,
+	MeteoalarmColorMode,
+	MeteoalarmAlertParsed,
 } from './types';
 
 // eslint-disable-next-line no-console
@@ -121,6 +124,9 @@ export class MeteoalarmCard extends LitElement {
 	}
 
 	public getCardSize(): number {
+		// Prevent over-allocating space for 'chip'
+		if (this.cardStyle === MeteoalarmCardStyle.Chip) return 1;
+				
 		return 2;
 	}
 
@@ -129,6 +135,9 @@ export class MeteoalarmCard extends LitElement {
 	}
 
 	public firstUpdated(): void {
+		// skip if 'chip' display
+		if (this.cardStyle === MeteoalarmCardStyle.Chip) return;
+		
 		this.measureCard();
 		this.attachObserver();
 		const swiper = (this.renderRoot as ShadowRoot).getElementById('swiper');
@@ -155,6 +164,9 @@ export class MeteoalarmCard extends LitElement {
 	}
 
 	private attachObserver() {
+		// skip if 'chip' display
+		if (this.cardStyle === MeteoalarmCardStyle.Chip) return;
+		
 		if (!this.resizeObserver) {
 			this.resizeObserver = new ResizeObserver(debounce(() => this.measureCard(), 250, false));
 		}
@@ -171,6 +183,9 @@ export class MeteoalarmCard extends LitElement {
 	}
 
 	private measureCard() {
+		// skip if 'chip' display
+		if (this.cardStyle === MeteoalarmCardStyle.Chip) return;
+		
 		if (!this.isConnected) return;
 		const card = this.shadowRoot!.querySelector('ha-card');
 		if (!card) return;
@@ -281,6 +296,15 @@ export class MeteoalarmCard extends LitElement {
 		return modeString as MeteoalarmScalingMode;
 	}
 
+	private get cardStyle(): MeteoalarmCardStyle {
+		const modeString = this.config.card_style;
+		if (!modeString) return MeteoalarmCardStyle.Card;
+		if (!Object.values(MeteoalarmCardStyle).includes(modeString as any)) {
+			throw new Error('MeteoalarmCard: ' + localize('error.invalid_card_style'));
+		}
+		return modeString as MeteoalarmCardStyle;
+	}
+
 	protected render(): TemplateResult | void {
 		try {
 			const parser = new EventsParser(this.integration);
@@ -301,6 +325,11 @@ export class MeteoalarmCard extends LitElement {
 				);
 				this.setCardMargin(false);
 				return html``;
+			}
+
+			// if 'chip' display, render chip instead
+			if (this.cardStyle === MeteoalarmCardStyle.Chip) {
+				return this.renderChip(events);
 			}
 
 			this.setCardMargin(true);
@@ -354,9 +383,54 @@ export class MeteoalarmCard extends LitElement {
 		}
 	}
 
+	private getSeverityText(cssClass: string): string {
+		const level = cssClass.replace('event-', ''); // 'red' | 'orange' | 'yellow' | 'none'
+		if (level === 'none') return localize('events.no_warnings');
+		return localize(`messages.${level}.generic`);
+	}
+
+	private renderChip(events: MeteoalarmAlertParsed[]): TemplateResult {
+		const topEvent = events[0];
+		if (!topEvent?.isActive && this.config.hide_when_no_warning) return html``;
+
+		this.currentEntity = topEvent?.entity?.entity_id;
+
+		const narrowHeadline = topEvent?.headlines[1] ?? topEvent?.headlines[0] ?? '';
+
+		return html`
+			<ha-card class="chip-card">
+				<div
+				class="chip ${topEvent?.cssClass ?? 'event-none'}"
+				@action=${this.handleAction}
+				.actionHandler=${actionHandler({ hasHold: hasAction(this.config.hold_action) })}
+				tabindex="0"
+				>
+					${this.renderChipIcon(topEvent.icon)}
+					<div class="chip-text">
+						${topEvent.caption && topEvent.captionIcon
+							? html`
+									<div class="caption">
+										${this.renderCaption(topEvent.captionIcon, topEvent.caption)}
+									</div>
+								`
+							: ''}
+						<div class="chip-headline">${narrowHeadline}</div>
+					</div>
+				</div>
+			</ha-card>
+		`;
+	}
+
 	private renderMainIcon(icon: string): TemplateResult {
 		return html`<ha-icon
 			class="main-icon"
+			icon="mdi:${icon}"
+		></ha-icon>`;
+	}
+
+	private renderChipIcon(icon: string): TemplateResult {
+		return html`<ha-icon
+			class="chip-icon"
 			icon="mdi:${icon}"
 		></ha-icon>`;
 	}
@@ -394,13 +468,18 @@ export class MeteoalarmCard extends LitElement {
 		`;
 	}
 
+	// no icon on 'chip' style cards
 	private renderCaption(icon: string, caption: string): TemplateResult {
 		return html`
 			<span class="caption-text">${caption}</span>
-			<ha-icon
-				class="caption-icon"
-				icon="mdi:${icon}"
-			></ha-icon>
+			${this.cardStyle !== MeteoalarmCardStyle.Chip ?
+				html`
+					<ha-icon
+						class="caption-icon"
+						icon="mdi:${icon}"
+					></ha-icon>
+				`
+			: ''}
 		`;
 	}
 

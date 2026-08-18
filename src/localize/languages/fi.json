@@ -13,6 +13,7 @@
     "missing_entity": "Entiteetti puuttuu!",
     "invalid_integration": "Integraatiota ei ole valittu oikein.",
     "invalid_scaling_mode": "Skaalautumisasetus ei ole oikein!",
+    "invalid_card_style": null,
     "entity_invalid": {
       "single": "Valittu integraatio ei sovi valitun entiteetin kanssa.",
       "multiple": "Valittu integraatio ei sovi valittujen entiteettien kanssa: {entity}."
@@ -47,6 +48,11 @@
       "headline": "Vain otsikko",
       "scale": "Vain skaalaus",
       "headline_and_scale": "Otsikko ja skaalaus"
+    },
+    "card_style": null,
+    "card_style_options": {
+      "card": null,
+      "chip": null
     }
   },
   "events": {

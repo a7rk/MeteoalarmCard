@@ -13,6 +13,7 @@
     "missing_entity": "¡Se requiere especificar la entidad!",
     "invalid_integration": "¡Esta integración no es válida!",
     "invalid_scaling_mode": "¡Este modo de escalado no es válido!",
+    "invalid_card_style": null,
     "entity_invalid": {
       "single": "La integración seleccionada no coincide con la entidad seleccionada.",
       "multiple": "La integración seleccionada no coincide con las entidades seleccionadas: {entity}."
@@ -47,6 +48,11 @@
       "headline": "Solo Encabezado",
       "scale": "Escalado",
       "headline_and_scale": "Encabezado y Escalado"
+    },
+    "card_style": null,
+    "card_style_options": {
+      "card": null,
+      "chip": null
     }
   },
   "events": {
