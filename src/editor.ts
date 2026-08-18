@@ -14,7 +14,6 @@ import {
 	MeteoalarmScalingMode,
 	MeteoalarmCardStyle,
 	WarningRule,
-	MeteoalarmCardStyle,
 } from './types';
 
 @customElement('meteoalarm-card-editor')
@@ -40,14 +39,6 @@ export class MeteoalarmCardCardEditor extends LitElement implements LovelaceCard
 			this.formData = this.computeFormData(this.integration);
 			this.warning = this.computeWarnings(this.integration);
 		}
-	}
-
-	get _card_style(): string {
-		return this._config?.card_style || 'card';
-	}
-
-	get _color_mode(): string {
-		return this._config?.color_mode || 'background';
 	}
 
 	protected render(): TemplateResult {
