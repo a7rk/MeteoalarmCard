@@ -14,6 +14,7 @@ import {
 	MeteoalarmScalingMode,
 	MeteoalarmCardStyle,
 	WarningRule,
+	MeteoalarmCardStyle,
 } from './types';
 
 @customElement('meteoalarm-card-editor')
@@ -108,6 +109,19 @@ export class MeteoalarmCardCardEditor extends LitElement implements LovelaceCard
 			name: 'entities',
 			required: true,
 			selector: { entity: isSingleEntity(integration) ? {} : { multiple: true } },
+		});
+
+		schema.push({
+			name: 'card_style',
+			selector: {
+				select: {
+					mode: 'dropdown',
+					options: Object.values(MeteoalarmCardStyle).map((mode) => ({
+						value: mode,
+						label: localize(`editor.card_style_options.${mode}`),
+					})),
+				},
+			},
 		});
 
 		const switches: HaFormSchema[] = [];

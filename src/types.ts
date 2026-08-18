@@ -149,11 +149,11 @@ export interface WarningRule {
 }
 
 export enum MeteoalarmCardStyle {
-  Card = 'card',
-  Chip = 'chip',
+	Card = 'card',
+	Chip = 'chip',
 }
 
 export enum MeteoalarmColorMode {
-  Background = 'background',
-  Icon = 'icon',
+	Background = 'background',
+	Icon = 'icon',
 }
