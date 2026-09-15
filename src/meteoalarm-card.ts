@@ -1,6 +1,5 @@
 import {
 	ActionHandlerEvent,
-	debounce,
 	EntityConfig,
 	handleAction,
 	hasAction,
@@ -9,15 +8,15 @@ import {
 	LovelaceCardConfig,
 	LovelaceCardEditor,
 } from 'custom-card-helpers';
-import { HassEntity } from 'home-assistant-js-websocket';
-import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from 'lit';
-import { customElement, property, state } from 'lit/decorators';
-import { ifDefined } from 'lit/directives/if-defined';
-import ResizeObserver from 'resize-observer-polyfill';
+import type { HassEntity } from 'home-assistant-js-websocket';
+import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult, unsafeCSS } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import Swiper, { Pagination } from 'swiper';
+import swiperCss from 'swiper/css?inline';
+import swiperPaginationCss from 'swiper/css/pagination?inline';
 import { version as CARD_VERSION } from '../package.json';
-import EventsParser from './events-praser';
-import swiperStyles from './external/swiperStyles';
+import EventsParser from './events-parser';
 import { actionHandler } from './helpers/action-handler-directive';
 import { processConfigEntities } from './helpers/process-config-entities';
 import INTEGRATIONS from './integrations/integrations';
@@ -25,6 +24,7 @@ import { localize } from './localize/localize';
 import { getCanvasFont, getTextWidth } from './measure-text';
 import styles from './styles';
 import {
+	DEFAULT_SCALING_MODE,
 	MeteoalarmCardConfig,
 	MeteoalarmIntegration,
 	MeteoalarmIntegrationEntityType,
@@ -116,7 +116,7 @@ export class MeteoalarmCard extends LitElement {
 	}
 
 	static get styles(): CSSResultGroup {
-		return [swiperStyles, styles];
+		return [unsafeCSS(swiperCss), unsafeCSS(swiperPaginationCss), styles];
 	}
 
 	public getCardSize(): number {
@@ -127,9 +127,12 @@ export class MeteoalarmCard extends LitElement {
 		return hasConfigOrEntityChanged(this, changedProps, false);
 	}
 
-	public firstUpdated(): void {
-		this.measureCard();
+	protected updated(): void {
 		this.attachObserver();
+		this.measureCard();
+	}
+
+	public firstUpdated(): void {
 		const swiper = (this.renderRoot as ShadowRoot).getElementById('swiper');
 		if (!swiper) return;
 		this.swiper = new Swiper(swiper, {
@@ -155,11 +158,15 @@ export class MeteoalarmCard extends LitElement {
 
 	private attachObserver() {
 		if (!this.resizeObserver) {
-			this.resizeObserver = new ResizeObserver(debounce(() => this.measureCard(), 250, false));
+			this.resizeObserver = new ResizeObserver(() => this.measureCard());
 		}
+
+		this.resizeObserver.disconnect();
+
 		const card = this.shadowRoot!.querySelector('ha-card');
-		if (!card) return;
-		this.resizeObserver.observe(card);
+		if (card) {
+			this.resizeObserver.observe(card);
+		}
 	}
 
 	private getHeadlineElements(container: HTMLElement): [HTMLElement, HTMLElement, HTMLElement] {
@@ -190,6 +197,9 @@ export class MeteoalarmCard extends LitElement {
 		const swiper = card.querySelector('.swiper-wrapper');
 		const slides = swiper?.getElementsByClassName('swiper-slide') as HTMLCollectionOf<HTMLElement>;
 		for (const slide of slides) {
+			// Not laid out yet, measuring would collapse the card to icon only
+			if (slide.clientWidth <= 0) continue;
+
 			const [regular, narrow, veryNarrow] = this.getHeadlineElements(slide);
 			const sizes: [string, HTMLElement][] = [['regular', regular]];
 			if (swapHeadline) {
@@ -273,7 +283,7 @@ export class MeteoalarmCard extends LitElement {
 
 	private get scalingMode(): MeteoalarmScalingMode {
 		const modeString = this.config.scaling_mode;
-		if (!modeString) return MeteoalarmScalingMode.HeadlineAndScale;
+		if (!modeString) return DEFAULT_SCALING_MODE;
 		if (!Object.values(MeteoalarmScalingMode).includes(modeString as any)) {
 			throw new Error('MeteoalarmCard: ' + localize('error.invalid_scaling_mode'));
 		}
@@ -328,13 +338,15 @@ export class MeteoalarmCard extends LitElement {
 											<div class="content">
 												${this.renderMainIcon(event.icon)} ${this.renderHeadlines(event.headlines)}
 											</div>
-											${event.caption && event.captionIcon
-												? html`
-														<div class="caption">
-															${this.renderCaption(event.captionIcon, event.caption)}
-														</div>
-												  `
-												: ''}
+											${
+												event.caption && event.captionIcon
+													? html`
+															<div class="caption">
+																${this.renderCaption(event.captionIcon, event.caption)}
+															</div>
+														`
+													: ''
+											}
 										</div>
 									`,
 								)}

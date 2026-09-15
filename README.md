@@ -1,6 +1,6 @@
 # Meteoalarm Card
 
-[![version](https://img.shields.io/npm/v/meteoalarm-card?label=version)](https://www.npmjs.com/package/meteoalarm-card)
+[![version](https://img.shields.io/github/v/release/MrBartusek/MeteoalarmCard?label=version)](https://github.com/MrBartusek/MeteoalarmCard/releases)
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/integration)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/MrBartusek/MeteoalarmCard/build.yaml?branch=master)](https://github.com/MrBartusek/MeteoalarmCard/actions)
 [![downloads](https://img.shields.io/github/downloads/MrBartusek/MeteoalarmCard/total?color=brightgreen)](https://github.com/MrBartusek/MeteoalarmCard/releases) 
@@ -18,7 +18,9 @@ MeteoalarmCard is a powerful yet simple custom card to show meteorological warni
 
 We recommend installing MeteoalarmCard via [Home Assistant Community Store](https://hacs.xyz)
 
-Just search for `Meteoalarm Card` in `Frontend` tab and hit download.
+Just search for `Meteoalarm Card` in HACS and hit download, or use the button below to open it directly in your instance.
+
+[![Open in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=MrBartusek&repository=MeteoalarmCard&category=plugin)
 
 ### Manual Installation
 
@@ -52,7 +54,7 @@ Here is what configuration options mean:
 | `integration`          | `string`  | **Required** | Name of the integration. Available options are listed under [Supported integrations](#supported-integrations) |
 | `entities`             | `array`   | **Required** | Entity ID, a list of entity IDs or a list of entity objects.                         |
 | `override_headline`    | `boolean` | `false`      | _[Only some integrations]_ Override headline proved by integration by generated one. |
-| `scaling_mode`         | `string`  | `headline_and_scale` | Headline scaling mode. See [scaling-mode.md](dosc/scaling-mode.md)           |
+| `scaling_mode`         | `string`  | `headline_and_scale` | Headline scaling mode. See [scaling-mode.md](docs/scaling-mode.md)           |
 | `disable_swiper`       | `boolean` | `false`      | _[Only some integrations]_ Disable slider when displaying multiple alerts, you may not see some important alerts. |
 | `hide_caption`         | `boolean` | `false`      | _[DWD only]_ Hide top-right caption when showing advance alerts.
 | `hide_when_no_warning` | `boolean` | `false`      | Hide the card when no warning is active. This works like a [conditional card](https://www.home-assistant.io/lovelace/conditional/). |
@@ -103,7 +105,7 @@ This card supports translations. Please, help to add more translations and impro
 - Português (Portuguese)
 - Slovenský (Slovak)
 - Svenska (Swedish)
-- [_Your language?_](./CONTRIBUTING.md#how-to-add-translation)
+- [_Your language?_](./CONTRIBUTING.md#how-to-add-translations)
 
 ## Supported integrations
 
@@ -165,7 +167,7 @@ Below are the available CSS variables that you can modify:
 - `--orange-level-background-color`: The background color for orange level alerts.
 - `--yellow-level-background-color`: The background color for yellow level alerts.
 - `--headline-font-size`: Font size of headline (alert name). **Note**: in order for this to
-  work properly you need to set [scaling-mode](https://github.com/MrBartusek/MeteoalarmCard/blob/master/dosc/scaling-mode.md) to `disabled`
+  work properly you need to set [scaling-mode](https://github.com/MrBartusek/MeteoalarmCard/blob/master/docs/scaling-mode.md) to `disabled`
 - `--caption-font-size`: Font size for caption element. 
 
 ## Contributing
