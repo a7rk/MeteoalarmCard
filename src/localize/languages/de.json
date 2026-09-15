@@ -13,7 +13,7 @@
     "missing_entity": "Die angegebene Entität ist nicht vorhanden!",
     "invalid_integration": "Diese Integration ist nicht gültig!",
     "invalid_scaling_mode": null,
-    "invalid_card_style": null,
+    "invalid_display_mode": null,
     "entity_invalid": {
       "single": "Ausgewählte Integration und Entität passen nicht zusammen.",
       "multiple": "Ausgewählte Integration passt nicht zu Entitäten: {entity}."
@@ -49,10 +49,10 @@
       "scale": null,
       "headline_and_scale": null
     },
-    "card_style": "Kartenlayout",
-    "card_style_options": {
+    "display_mode": "Kartenlayout",
+    "display_mode_options": {
       "card": "Karte",
-      "chip": "Chip"
+      "badge": "Badge"
     }
   },
   "events": {

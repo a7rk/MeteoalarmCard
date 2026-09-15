@@ -13,7 +13,7 @@
     "missing_entity": "Изисква се посочване на обекти!",
     "invalid_integration": "Тази интеграция не е валидна!",
     "invalid_scaling_mode": null,
-    "invalid_card_style": null,
+    "invalid_display_mode": null,
     "entity_invalid": {
       "single": "Избраната интеграция не съответства на избрания обект.",
       "multiple": "Избраната интеграция не съответства на избраните обекти: {entity}."
@@ -49,10 +49,10 @@
       "scale": null,
       "headline_and_scale": null
     },
-    "card_style": null,
-    "card_style_options": {
+    "display_mode": null,
+    "display_mode_options": {
       "card": null,
-      "chip": null
+      "badge": null
     }
   },
   "events": {

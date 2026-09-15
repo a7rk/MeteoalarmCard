@@ -13,7 +13,7 @@
     "missing_entity": "L'entité est requise !",
     "invalid_integration": "Cette intégration n'est pas valide !",
     "invalid_scaling_mode": null,
-    "invalid_card_style": null,
+    "invalid_display_mode": null,
     "entity_invalid": {
       "single": null,
       "multiple": null
@@ -49,10 +49,10 @@
       "scale": null,
       "headline_and_scale": null
     },
-    "card_style": null,
-    "card_style_options": {
+    "display_mode": null,
+    "display_mode_options": {
       "card": null,
-      "chip": null
+      "badge": null
     }
   },
   "events": {

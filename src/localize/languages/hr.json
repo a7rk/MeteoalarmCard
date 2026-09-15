@@ -13,7 +13,7 @@
     "missing_entity": "Potrebno je navesti entitet!",
     "invalid_integration": "Integracija nije ispravna!",
     "invalid_scaling_mode": null,
-    "invalid_card_style": null,
+    "invalid_display_mode": null,
     "entity_invalid": {
       "single": "Odabrana integracija se ne podudara s odabranim entitetom.",
       "multiple": "Odabrana integracija se ne podudara s odabranim entitetima: {entity}."
@@ -49,10 +49,10 @@
       "scale": null,
       "headline_and_scale": null
     },
-    "card_style": null,
-    "card_style_options": {
+    "display_mode": null,
+    "display_mode_options": {
       "card": null,
-      "chip": null
+      "badge": null
     }
   },
   "events": {
