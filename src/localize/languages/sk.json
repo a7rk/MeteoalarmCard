@@ -13,7 +13,7 @@
     "missing_entity": "Je potrebné zadať entitu!",
     "invalid_integration": "Táto integrácia nie je platná!",
     "invalid_scaling_mode": null,
-    "invalid_card_style": null,
+    "invalid_display_mode": null,
     "entity_invalid": {
       "single": "Vybratá integrácia sa nezhoduje s vybratou entitou.",
       "multiple": "Vybratá integrácia sa nezhoduje s vybratými entitami: {entity}."
@@ -49,10 +49,10 @@
       "scale": null,
       "headline_and_scale": null
     },
-    "card_style": null,
-    "card_style_options": {
+    "display_mode": null,
+    "display_mode_options": {
       "card": null,
-      "chip": null
+      "badge": null
     }
   },
   "events": {

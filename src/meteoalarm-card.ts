@@ -12,6 +12,7 @@ import type { HassEntity } from 'home-assistant-js-websocket';
 import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import { styleMap } from 'lit/directives/style-map.js';
 import Swiper, { Pagination } from 'swiper';
 import swiperCss from 'swiper/css?inline';
 import swiperPaginationCss from 'swiper/css/pagination?inline';
@@ -29,7 +30,7 @@ import {
 	MeteoalarmIntegration,
 	MeteoalarmIntegrationEntityType,
 	MeteoalarmScalingMode,
-	MeteoalarmCardStyle,
+	MeteoalarmDisplayMode,
 	MeteoalarmAlertParsed,
 } from './types';
 
@@ -122,8 +123,8 @@ export class MeteoalarmCard extends LitElement {
 	}
 
 	public getCardSize(): number {
-		// Prevent over-allocating space for 'chip'
-		if (this.cardStyle === MeteoalarmCardStyle.Chip) return 1;
+		// Prevent over-allocating space for 'badge'
+		if (this.displayMode === MeteoalarmDisplayMode.Badge) return 1;
 
 		return 2;
 	}
@@ -138,8 +139,8 @@ export class MeteoalarmCard extends LitElement {
 	}
 
 	public firstUpdated(): void {
-		// skip if 'chip' display
-		if (this.cardStyle === MeteoalarmCardStyle.Chip) return;
+		// skip if 'badge' display
+		if (this.displayMode === MeteoalarmDisplayMode.Badge) return;
 
 		this.measureCard();
 		this.attachObserver();
@@ -167,8 +168,8 @@ export class MeteoalarmCard extends LitElement {
 	}
 
 	private attachObserver() {
-		// skip if 'chip' display
-		if (this.cardStyle === MeteoalarmCardStyle.Chip) return;
+		// skip if 'badge' display
+		if (this.displayMode === MeteoalarmDisplayMode.Badge) return;
 
 		if (!this.resizeObserver) {
 			this.resizeObserver = new ResizeObserver(() => this.measureCard());
@@ -190,8 +191,8 @@ export class MeteoalarmCard extends LitElement {
 	}
 
 	private measureCard() {
-		// skip if 'chip' display
-		if (this.cardStyle === MeteoalarmCardStyle.Chip) return;
+		// skip if 'badge' display
+		if (this.displayMode === MeteoalarmDisplayMode.Badge) return;
 
 		if (!this.isConnected) return;
 		const card = this.shadowRoot!.querySelector('ha-card');
@@ -306,13 +307,13 @@ export class MeteoalarmCard extends LitElement {
 		return modeString as MeteoalarmScalingMode;
 	}
 
-	private get cardStyle(): MeteoalarmCardStyle {
-		const modeString = this.config.card_style;
-		if (!modeString) return MeteoalarmCardStyle.Card;
-		if (!Object.values(MeteoalarmCardStyle).includes(modeString as any)) {
-			throw new Error('MeteoalarmCard: ' + localize('error.invalid_card_style'));
+	private get displayMode(): MeteoalarmDisplayMode {
+		const modeString = this.config.display_mode;
+		if (!modeString) return MeteoalarmDisplayMode.Card;
+		if (!Object.values(MeteoalarmDisplayMode).includes(modeString as any)) {
+			throw new Error('MeteoalarmCard: ' + localize('error.invalid_display_mode'));
 		}
-		return modeString as MeteoalarmCardStyle;
+		return modeString as MeteoalarmDisplayMode;
 	}
 
 	protected render(): TemplateResult | void {
@@ -337,9 +338,9 @@ export class MeteoalarmCard extends LitElement {
 				return html``;
 			}
 
-			// if 'chip' display, render chip instead
-			if (this.cardStyle === MeteoalarmCardStyle.Chip) {
-				return this.renderChip(events);
+			// if 'badge' display, render badge instead
+			if (this.displayMode === MeteoalarmDisplayMode.Badge) {
+				return this.renderBadge(events);
 			}
 
 			this.setCardMargin(true);
@@ -364,6 +365,7 @@ export class MeteoalarmCard extends LitElement {
 										<div
 											class="swiper-slide ${event.cssClass}"
 											entity_id=${ifDefined(event.entity?.entity_id)}
+											style=${styleMap(this.getCardStyle(event.cssClass))}
 										>
 											<div class="content">
 												${this.renderMainIcon(event.icon)} ${this.renderHeadlines(event.headlines)}
@@ -393,43 +395,69 @@ export class MeteoalarmCard extends LitElement {
 		}
 	}
 
+	// TODO: seems to be dead code
 	private getSeverityText(cssClass: string): string {
-		const level = cssClass.replace('event-', ''); // 'red' | 'orange' | 'yellow' | 'none'
+		const level = this.getSeverityLevel(cssClass); // 'red' | 'orange' | 'yellow' | 'none'
 		if (level === 'none') return localize('events.no_warnings');
 		return localize(`messages.${level}.generic`);
 	}
 
-	private renderChip(events: MeteoalarmAlertParsed[]): TemplateResult {
+	private getSeverityLevel(cssClass: string): string {
+		return cssClass.replace('event-', ''); // 'red' | 'orange' | 'yellow' | 'none'
+	}
+
+	private getCardStyle = (cssClass: string) => {
+		const level = this.getSeverityLevel(cssClass);
+		return {
+			'background-color': `var(--${level}-level-background-color)`,
+		};
+	};
+
+	private renderBadge(events: MeteoalarmAlertParsed[]): TemplateResult {
 		const topEvent = events[0];
 		if (!topEvent?.isActive && this.config.hide_when_no_warning) return html``;
 
 		this.currentEntity = topEvent?.entity?.entity_id;
 
 		const narrowHeadline = topEvent?.headlines[1] ?? topEvent?.headlines[0] ?? '';
+		const badgeClass = topEvent.cssClass ?? 'event-none';
+		const level = this.getSeverityLevel(badgeClass);
+
+		const badgeLabel =
+			topEvent.caption && topEvent.captionIcon
+				? html`
+						<span class="badge-caption">
+							${this.renderCaption(topEvent.captionIcon, topEvent.caption)}
+						</span>
+					`
+				: 'Alert!';
+
+		// <ha-badge> has its own shadow-root hence custom css styles best defined inline
+		// using styleMap(). Yellow badges need a dark contrast color since its background is light;
+		// other levels use the standard active text color. Secondary color = primary's alpha * .8
+		// (relative color syntax, requires Chrome 119+/Safari 16.4+/Firefox 128+).
+		const style = {
+			'--ha-card-background': `var(--${level}-level-background-color)`,
+			'--primary-text-color':
+				level === 'yellow' ? 'var(--text-contrast-color-active)' : 'var(--text-color-active)',
+			'--secondary-text-color': 'rgb(from var(--primary-text-color) r g b / calc(alpha * .8))',
+			'--badge-color': 'var(--primary-text-color)',
+		};
 
 		return html`
-			<ha-card class="chip-card">
-				<div
-					class="chip ${topEvent?.cssClass ?? 'event-none'}"
-					@action=${this.handleAction}
-					.actionHandler=${actionHandler({ hasHold: hasAction(this.config.hold_action) })}
-					tabindex="0"
-				>
-					${this.renderChipIcon(topEvent.icon)}
-					<div class="chip-text">
-						${
-							topEvent.caption && topEvent.captionIcon
-								? html`
-										<div class="caption">
-											${this.renderCaption(topEvent.captionIcon, topEvent.caption)}
-										</div>
-									`
-								: ''
-						}
-						<div class="chip-headline">${narrowHeadline}</div>
-					</div>
-				</div>
-			</ha-card>
+			<ha-badge
+				.type="button"
+				@action=${this.handleAction}
+				.actionHandler=${actionHandler({
+					hasHold: hasAction(this.config!.hold_action),
+					hasDoubleClick: hasAction(this.config!.double_tap_action),
+				})}
+				.label=${badgeLabel}
+				style=${styleMap(style)}
+				class=${badgeClass}
+			>
+				${this.renderBadgeIcon(topEvent.icon)} ${narrowHeadline}
+			</ha-badge>
 		`;
 	}
 
@@ -440,11 +468,11 @@ export class MeteoalarmCard extends LitElement {
 		></ha-icon>`;
 	}
 
-	private renderChipIcon(icon: string): TemplateResult {
-		return html`<ha-icon
-			class="chip-icon"
-			icon="mdi:${icon}"
-		></ha-icon>`;
+	private renderBadgeIcon(icon: string): TemplateResult {
+		return html`<ha-state-icon
+			slot="icon"
+			.icon="mdi:${icon}"
+		></ha-state-icon>`;
 	}
 
 	// Transfer array of one, two or three headlines in descending length
@@ -480,12 +508,12 @@ export class MeteoalarmCard extends LitElement {
 		`;
 	}
 
-	// no icon on 'chip' style cards
+	// no caption icon on 'badges'
 	private renderCaption(icon: string, caption: string): TemplateResult {
 		return html`
 			<span class="caption-text">${caption}</span>
 			${
-				this.cardStyle !== MeteoalarmCardStyle.Chip
+				this.displayMode !== MeteoalarmDisplayMode.Badge
 					? html`
 							<ha-icon
 								class="caption-icon"

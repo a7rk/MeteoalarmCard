@@ -65,7 +65,7 @@
                 "missing_entity",
                 "invalid_integration",
                 "invalid_scaling_mode",
-                "invalid_card_style",
+                "invalid_display_mode",
                 "entity_invalid"
             ],
             "properties": {
@@ -81,8 +81,8 @@
                     "$id": "#/properties/error/properties/invalid_scaling_mode",
                     "type": ["string", "null"]
                 },
-                "invalid_card_style": {
-                    "$id": "#/properties/error/properties/invalid_card_style",
+                "invalid_display_mode": {
+                    "$id": "#/properties/error/properties/invalid_display_mode",
                     "type": ["string", "null"]
                 },
                 "entity_invalid": {
@@ -124,8 +124,8 @@
                 "error",
                 "scaling_mode",
                 "scaling_mode_options",
-                "card_style",
-                "card_style_options"
+                "display_mode",
+                "display_mode_options"
             ],
             "properties": {
                 "entity": {
@@ -260,24 +260,24 @@
                     },
                     "additionalProperties": false
                 },
-                "card_style": {
-                    "$id": "#/properties/editor/properties/card_style",
+                "display_mode": {
+                    "$id": "#/properties/editor/properties/display_mode",
                     "type": ["string", "null"]
                 },
-                "card_style_options": {
-                    "$id": "#/properties/editor/properties/card_style_options",
+                "display_mode_options": {
+                    "$id": "#/properties/editor/properties/display_mode_options",
                     "type": "object",
                     "required": [
                         "card",
-                        "chip"
+                        "badge"
                     ],
                     "properties": {
                         "card": {
                             "$id": "#/properties/editor/properties/scaling_mode_options/properties/card",
                             "type": ["string", "null"]
                         },
-                        "chip": {
-                            "$id": "#/properties/editor/properties/scaling_mode_options/properties/chip",
+                        "badge": {
+                            "$id": "#/properties/editor/properties/scaling_mode_options/properties/badge",
                             "type": ["string", "null"]
                         }
                     },

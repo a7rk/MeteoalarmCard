@@ -10,7 +10,7 @@ export interface MeteoalarmCardConfig extends LovelaceCardConfig {
 	hide_caption?: boolean;
 	disable_swiper?: boolean;
 	scaling_mode?: string;
-	card_style?: string;
+	display_mode?: string;
 	color_mode?: string;
 	ignored_events?: string[];
 	ignored_levels?: string[];
@@ -148,9 +148,9 @@ export interface WarningRule {
 	condition: boolean;
 }
 
-export enum MeteoalarmCardStyle {
+export enum MeteoalarmDisplayMode {
 	Card = 'card',
-	Chip = 'chip',
+	Badge = 'badge',
 }
 
 export enum MeteoalarmColorMode {

@@ -13,7 +13,7 @@
     "missing_entity": "Az entitások megadása kötelező!",
     "invalid_integration": "Ez az integráció nem érvényes!",
     "invalid_scaling_mode": "Ez a méretezési mód nem érvényes!",
-    "invalid_card_style": null,
+    "invalid_display_mode": null,
     "entity_invalid": {
       "single": "A kiválasztott integráció nem egyezik a kiválasztott entitással.",
       "multiple": "A kiválasztott integráció nem egyezik a kiválasztott entitásokkal: {entity}."
@@ -49,10 +49,10 @@
       "scale": "Csak méretezés",
       "headline_and_scale": "Címsor és méretezés"
     },
-    "card_style": null,
-    "card_style_options": {
+    "display_mode": null,
+    "display_mode_options": {
       "card": null,
-      "chip": null
+      "badge": null
     }
   },
   "events": {

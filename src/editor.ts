@@ -12,6 +12,7 @@ import {
 	MeteoalarmIntegration,
 	MeteoalarmIntegrationEntityType,
 	MeteoalarmScalingMode,
+	MeteoalarmDisplayMode,
 	WarningRule,
 } from './types';
 
@@ -220,13 +221,13 @@ export class MeteoalarmCardCardEditor extends LitElement implements LovelaceCard
 		});
 
 		schema.push({
-			name: 'card_style',
+			name: 'display_mode',
 			selector: {
 				select: {
 					mode: 'dropdown',
-					options: Object.values(MeteoalarmCardStyle).map((mode) => ({
+					options: Object.values(MeteoalarmDisplayMode).map((mode) => ({
 						value: mode,
-						label: localize(`editor.card_style_options.${mode}`),
+						label: localize(`editor.display_mode_options.${mode}`),
 					})),
 				},
 			},

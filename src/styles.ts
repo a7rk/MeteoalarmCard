@@ -8,11 +8,12 @@ export default css`
 
 		--text-color: inherit;
 		--text-color-active: white;
+		--text-contrast-color-active: rgb(from black r g b / 0.8);
 		--headline-font-size: 22px;
 		--caption-font-size: 13px;
 
 		--inactive-background-color: inherit;
-		--red-level-color: var(---error-color, #db4437);
+		--red-level-background-color: var(---error-color, #db4437);
 		--orange-level-background-color: #ee5a24;
 		--yellow-level-background-color: var(--warning-color, #ffa600);
 
@@ -95,8 +96,8 @@ export default css`
 		display: none;
 	}
 
-	.event-red {
-		background-color: var(--red-level-color);
+	/*	.event-red {
+		background-color: var(--red-level-background-color);
 	}
 
 	.event-orange {
@@ -105,7 +106,7 @@ export default css`
 
 	.event-yellow {
 		background-color: var(--yellow-level-background-color);
-	}
+	}*/
 
 	.event-red,
 	.event-orange,
@@ -121,83 +122,5 @@ export default css`
 		--swiper-pagination-bullet-size: 5px;
 		--swiper-pagination-bullet-inactive-color: #dfdfdf;
 		--swiper-pagination-color: #ffffff;
-	}
-
-	.chip-card {
-		flex: 0 0 auto;
-		width: fit-content;
-		height: 36px;
-		box-sizing: border-box;
-		border-radius: 999px;
-		box-shadow: none; /* or a lighter one if you want the badge elevation */
-		background: var(--ha-card-background, var(--card-background-color));
-	}
-
-	.chip {
-		display: inline-flex;
-		align-items: center;
-		align-self: flex-start;
-		width: fit-content;
-		height: 36px;
-		box-sizing: border-box;
-		gap: 8px;
-		padding: 0px 8px;
-		border-radius: 999px;
-		cursor: pointer;
-		color: var(--text-color);
-		max-width: 260px;
-	}
-
-	.chip-icon {
-		--mdc-icon-size: 18px;
-		width: 18px;
-		height: 18px;
-		line-height: 0;
-		display: flex;
-		align-items: center;
-		align-self: center;
-		justify-content: center;
-		flex: 0 0 auto;
-		margin: 0;
-	}
-
-	.chip-text {
-		display: flex;
-		flex-direction: column;
-		overflow: hidden;
-		line-height: 1.15;
-		justify-content: center;
-		padding-right: 4px;
-		padding-inline-end: 4px;
-		padding-inline-start: initial;
-	}
-
-	.chip-headline {
-		font-size: 12px;
-		font-weight: 500;
-		line-height: 16px;
-		letter-spacing: 0.1px;
-		overflow: hidden;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-	}
-
-	.chip-caption {
-		font-size: 10px;
-		font-weight: 500;
-		line-height: 10px;
-		letter-spacing: 0.1px;
-		overflow: hidden;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-		opacity: 0.8;
-	}
-
-	.chip.event-yellow {
-		color: rgba(0, 0, 0, 0.8);
-	}
-
-	.chip.event-yellow .chip-caption {
-		color: rgba(0, 0, 0, 0.5);
 	}
 `;
