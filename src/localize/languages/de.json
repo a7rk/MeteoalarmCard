@@ -7,7 +7,11 @@
     "unavailable": {
       "long": "Integration nicht verfügbar",
       "short": "Nicht verfügbar"
-    }
+    },
+    "today": "Heute",
+    "tomorrow": "Morgen",
+    "allday": "Ganztägig",
+    "until": "bis"
   },
   "error": {
     "missing_entity": "Die angegebene Entität ist nicht vorhanden!",
@@ -65,8 +69,8 @@
     "volcano": "Vulkanaktivität",
     "snow_ice": "Schnee/Eis",
     "fog": "Nebel",
-    "high_temperature": "Hohe Temperatur",
-    "low_temperature": "Niedrige Temperatur",
+    "high_temperature": "Hitze",
+    "low_temperature": "Kälte",
     "coastal_event": "Küstenereignis",
     "tsunami": "Tsunami",
     "sea_event": "Meeresereignis",

@@ -7,7 +7,11 @@
     "unavailable": {
       "long": "L'intégration est indisponible",
       "short": "Indisponible"
-    }
+    },
+    "today": "Aujourd'hui",
+    "tomorrow": "Demain",
+    "allday": "Toute la journée",
+    "until": "jusqu'à"
   },
   "error": {
     "missing_entity": "L'entité est requise !",

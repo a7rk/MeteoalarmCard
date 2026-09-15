@@ -76,6 +76,12 @@ export class MeteoalarmCardCardEditor extends LitElement implements LovelaceCard
 
 	private findIntegration(key?: string): MeteoalarmIntegration | undefined {
 		return MeteoalarmCard.integrations.find((i) => i.metadata.key === key);
+	get _config_entry(): string {
+		return this._config?.config_entry || '';
+	}
+
+	get _override_headline(): boolean {
+		return this._config?.override_headline || false;
 	}
 
 	private computeSchema(integration?: MeteoalarmIntegration): HaFormSchema[] {
@@ -194,6 +200,13 @@ export class MeteoalarmCardCardEditor extends LitElement implements LovelaceCard
 
 		if (schema.name === 'entities') {
 			label = localize(`editor.${isSingleEntity(this.integration) ? 'entity' : 'entities'}`);
+	get _show_warning_times(): boolean {
+		return this._config?.show_warning_times || false;
+	}
+
+	protected render(): TemplateResult | void {
+		if (!this.hass) {
+			return html``;
 		}
 
 		if (schema.required) {
@@ -202,6 +215,217 @@ export class MeteoalarmCardCardEditor extends LitElement implements LovelaceCard
 
 		return label;
 	};
+		const isActionBacked = integration?.getActionEntities !== undefined;
+
+		return html`
+			<!-- Warnings-->
+			${isActionBacked ? html`` : generateEditorWarnings(integration, this._configEntities)}
+
+			<!-- Card style select -->
+			<div class="options">
+				<div>
+					<mwc-select
+						naturalMenuWidth
+						fixedMenuPosition
+						label=${`${localize('editor.card_style')}`}
+						.configValue=${'card_style'}
+						.value=${this._card_style}
+						@selected=${this._valueChanged}
+						@closed=${(ev) => ev.stopPropagation()}
+					>
+						${Object.values(MeteoalarmCardStyle).map((mode) => {
+							return html` <mwc-list-item .value=${mode}>
+								${localize(`editor.card_style_options.${mode}`)}
+							</mwc-list-item>`;
+						})}
+					</mwc-select>
+				</div>
+			</div>
+
+			<!-- Integration select -->
+			<mwc-select
+				naturalMenuWidth
+				fixedMenuPosition
+				label=${`${localize('editor.integration')} (${localize('editor.required')})`}
+				.configValue=${'integration'}
+				.value=${this._integration}
+				@selected=${this._valueChanged}
+				@closed=${(ev) => ev.stopPropagation()}
+			>
+				${MeteoalarmCard.integrations.map((integration) => {
+					return html`<mwc-list-item .value=${integration.metadata.key}
+						>${integration.metadata.name}</mwc-list-item
+					>`;
+				})}
+			</mwc-select>
+
+			<!-- Action-backed integration configuration -->
+			${isActionBacked
+				? html`
+						<mwc-textfield
+							label="GeoSphere Austria config entry ID (required)"
+							helper="Paste the config-entry ID of the GeoSphere Austria Warnings integration."
+							helperPersistent
+							.configValue=${'config_entry'}
+							.value=${this._config_entry}
+							@input=${this._valueChanged}
+						></mwc-textfield>
+				`
+				: ''}
+
+			<!-- Entity selector -->
+			${isActionBacked
+				? html`
+						<h3>Refresh entities (${localize('editor.required')})</h3>
+						<p>
+							Select one or more entities belonging to the selected weather-warning
+							integration. Their state changes trigger a new warning-list request.
+							The card does not render their attributes directly.
+						</p>
+
+						<p>
+							For GeoSphere Austria, each warning-level sensor will provide current and advance warnings.
+						</p>
+
+						<hui-entity-editor
+							.label=${' '}
+							.hass=${this.hass}
+							.entities=${this._configEntities}
+							@entities-changed=${this._entitiesChanged}
+						></hui-entity-editor>
+				`
+				: integration?.metadata.type == MeteoalarmIntegrationEntityType.SingleEntity
+				? html`
+						<ha-entity-picker
+							label=${`${localize('editor.entity')} (${localize('editor.required')})`}
+							allow-custom-entity
+							hideClearIcon
+							.hass=${this.hass}
+							.configValue=${'entities'}
+							.value=${(this._configEntities?.length || 0) > 0
+								? this._configEntities![0].entity
+								: ''}
+							@value-changed=${this._valueChanged}
+						></ha-entity-picker>
+				`
+				: html`
+						<h3>${localize('editor.entity')} (${localize('editor.required')})</h3>
+						<p>
+							${localize('editor.description.start')}
+							${' '}
+							${integration?.metadata.type == MeteoalarmIntegrationEntityType.CurrentExpected
+								? localize('editor.description.current_expected')
+								: ''}
+							${integration?.metadata.type == MeteoalarmIntegrationEntityType.Slots
+								? localize('editor.description.slots')
+								: ''}
+							${integration?.metadata.type ==
+							MeteoalarmIntegrationEntityType.WarningWatchStatementAdvisory
+								? localize('editor.description.warning_watch_statement_advisory')
+								: ''}
+							${integration?.metadata.type == MeteoalarmIntegrationEntityType.SeparateEvents
+								? localize('editor.description.separate_events')
+								: ''}
+							${' '}
+							${localize('editor.description.end')}
+						</p>
+
+						<hui-entity-editor
+							.label=${' '}
+							.hass=${this.hass}
+							.entities=${this._configEntities}
+							@entities-changed=${this._entitiesChanged}
+						></hui-entity-editor>
+				`}
+
+			<!-- Switches section -->
+			<div class="options">
+				<!-- Disable slider -->
+				${integration?.metadata.returnMultipleAlerts
+					? html`
+							<mwc-formfield .label=${localize('editor.disable_swiper')}>
+								<mwc-switch
+									.checked=${this._disable_swiper !== false}
+									.configValue=${'disable_swiper'}
+									@change=${this._valueChanged}
+								></mwc-switch>
+							</mwc-formfield>
+					  `
+					: ''}
+
+				<!-- Override headline -->
+				${integration?.metadata.returnHeadline
+					? html`
+							<mwc-formfield .label=${localize('editor.override_headline')}>
+								<mwc-switch
+									.checked=${this._override_headline !== false}
+									.configValue=${'override_headline'}
+									@change=${this._valueChanged}
+								></mwc-switch>
+							</mwc-formfield>
+					  `
+					: ''}
+
+				<!-- Hide caption -->
+				${integration?.metadata.type == MeteoalarmIntegrationEntityType.CurrentExpected
+					? html`
+							<mwc-formfield .label=${localize('editor.hide_caption')}>
+								<mwc-switch
+									.checked=${this._hide_caption !== false}
+									.configValue=${'hide_caption'}
+									@change=${this._valueChanged}
+								></mwc-switch>
+							</mwc-formfield>
+					  `
+					: ''}
+
+				<!-- Show warning times -->
+				<mwc-formfield .label=${localize('editor.show_warning_times')}>
+					<mwc-switch
+						.checked=${this._show_warning_times !== false}
+						.configValue=${'show_warning_times'}
+						@change=${this._valueChanged}
+					></mwc-switch>
+				</mwc-formfield>
+
+				<!-- Hide when no warning -->
+				<mwc-formfield .label=${localize('editor.hide_when_no_warning')}>
+					<mwc-switch
+						.checked=${this._hide_when_no_warning !== false}
+						.configValue=${'hide_when_no_warning'}
+						@change=${this._valueChanged}
+					></mwc-switch>
+				</mwc-formfield>
+			</div>
+
+			<!-- Card scaling mode select -->
+			<div class="options">
+				<div>
+					<mwc-select
+						naturalMenuWidth
+						fixedMenuPosition
+						label=${`${localize('editor.scaling_mode')}`}
+						.configValue=${'scaling_mode'}
+						.value=${this._scaling_mode}
+						@selected=${this._valueChanged}
+						@closed=${(ev) => ev.stopPropagation()}
+					>
+						${Object.values(MeteoalarmScalingMode).map((mode) => {
+							return html` <mwc-list-item .value=${mode}>
+								${localize(`editor.scaling_mode_options.${mode}`)}
+							</mwc-list-item>`;
+						})}
+					</mwc-select>
+					<a
+						href="https://github.com/MrBartusek/MeteoalarmCard/blob/master/docs/scaling-mode.md"
+						target="_blank"
+					>
+						Scaling mode documentation
+					</a>
+				</div>
+			</div>
+		`;
+	}
 
 	private computeHelper = (schema: HaFormSchema): string | undefined => {
 		if (schema.name !== 'entities') return undefined;

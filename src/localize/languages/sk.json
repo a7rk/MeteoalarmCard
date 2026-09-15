@@ -7,7 +7,11 @@
     "unavailable": {
       "long": "Integrácia nie je k dispozícii",
       "short": "Nedostupné"
-    }
+    },
+    "today": "Dnes",
+    "tomorrow": "Zajtra",
+    "allday": "Celý deň",
+    "until": "do"
   },
   "error": {
     "missing_entity": "Je potrebné zadať entitu!",

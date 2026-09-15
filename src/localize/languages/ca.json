@@ -7,7 +7,11 @@
     "unavailable": {
       "long": "La integració no està disponible",
       "short": "No disponible"
-    }
+    },
+    "today": "Avui",
+    "tomorrow": "Demà",
+    "allday": "Tot el dia",
+    "until": "fins"
   },
   "error": {
     "missing_entity": "Cal especificar les entitats!",

@@ -7,7 +7,11 @@
     "unavailable": {
       "long": "La integración no está disponible",
       "short": "No disponible"
-    }
+    },
+    "today": "Hoy",
+    "tomorrow": "Mañana",
+    "allday": "Todo el día",
+    "until": "hasta"
   },
   "error": {
     "missing_entity": "¡Se requiere especificar la entidad!",

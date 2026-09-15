@@ -7,7 +7,11 @@
     "unavailable": {
       "long": "Olem pole saadaval",
       "short": "Pole saadaval"
-    }
+    },
+    "today": "Täna",
+    "tomorrow": "Homme",
+    "allday": "Kogu päev",
+    "until": "kuni"
   },
   "error": {
     "missing_entity": "Vajalik on Meteoalarmi olem!",
