@@ -419,7 +419,7 @@ export class MeteoalarmCard extends LitElement {
 							${this.renderCaption(topEvent.captionIcon, topEvent.caption)}
 						</span>
 					`
-				: 'Alert!';
+				: '';
 
 		// <ha-badge> has its own shadow-root hence custom css styles best defined inline
 		// using styleMap(). Yellow badges need a dark contrast color since its background is light;
