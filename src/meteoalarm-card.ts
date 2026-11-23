@@ -583,10 +583,10 @@ export class MeteoalarmCard extends LitElement {
 		const level = this.getSeverityLevel(badgeClass);
 
 		const badgeLabel =
-			topEvent.caption && topEvent.captionIcon
+			topEvent.caption && topEvent.captionSuffixIcon
 				? html`
 						<span class="badge-caption">
-							${this.renderCaption(topEvent.captionIcon, topEvent.caption)}
+							${this.renderCaption(topEvent.captionPrefixText, topEvent.caption, topEvent.captionSuffixIcon)}
 						</span>
 					`
 				: '';
