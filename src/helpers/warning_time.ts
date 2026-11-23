@@ -101,7 +101,11 @@ function formatCurrentCaption(
 	const fullDay = isFullDayTiming(alert.timing);
 	const parsedStart = start ? parseTimestamp(start) : undefined;
 	const parsedEnd = end ? parseTimestamp(end) : undefined;
-	const isToday = parsedEnd && getLocalDayDifference(parsedEnd, now) === 0;
+	const effectiveEnd =
+		parsedEnd && fullDay && isStartOfLocalDay(parsedEnd)
+			? new Date(parsedEnd.getTime() - 60_000)
+			: parsedEnd;
+	const isToday = effectiveEnd && getLocalDayDifference(effectiveEnd, now) === 0;
 	const isNow = parsedStart && parsedStart.getTime() < now.getTime();
 
 	if (fullDay && isToday) {
@@ -186,11 +190,17 @@ function isFullDayTiming(timing: MeteoalarmAlertTiming | undefined): boolean {
 	const start = parseTimestamp(timing.start);
 	const end = parseTimestamp(timing.end);
 
-	if (!start || !end) {
+	if (!start || !end || !isStartOfLocalDay(start)) {
 		return false;
 	}
 
-	return isSameLocalCalendarDay(start, end) && isStartOfLocalDay(start) && isEndOfFullDay(end);
+	// 00:00 → 23:59 on the same day
+	if (isSameLocalCalendarDay(start, end) && isEndOfFullDay(end)) {
+		return true;
+	}
+
+	// 00:00 → 00:00 the next day (end-exclusive), as GeoSphere sends it
+	return isStartOfLocalDay(end) && getLocalDayDifference(end, start) === 1;
 }
 
 function isStartOfLocalDay(date: Date): boolean {
