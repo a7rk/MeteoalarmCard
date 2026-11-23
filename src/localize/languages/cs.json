@@ -17,6 +17,7 @@
     "missing_entity": "Entita je povinná!",
     "invalid_integration": "Tato integrace není platná!",
     "invalid_scaling_mode": "Tento režim změny velikosti není platný!",
+    "invalid_display_mode": null,
     "entity_invalid": {
       "single": "Vybraná integrace se neshoduje s entitou",
       "multiple": "Vybraná integrace se neshoduje s entitami: {entity}"
@@ -55,6 +56,11 @@
       "headline": "Pouze nadpis",
       "scale": "Pouze měřítko",
       "headline_and_scale": "Nadpis i měřítko"
+    },
+    "display_mode": null,
+    "display_mode_options": {
+      "card": null,
+      "badge": null
     },
     "show_warning_times": "Zobrazit časy varování"
   },

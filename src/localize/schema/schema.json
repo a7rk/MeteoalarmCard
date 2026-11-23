@@ -85,6 +85,7 @@
                 "missing_entity",
                 "invalid_integration",
                 "invalid_scaling_mode",
+                "invalid_display_mode",
                 "entity_invalid"
             ],
             "properties": {
@@ -98,6 +99,10 @@
                 },
                 "invalid_scaling_mode": {
                     "$id": "#/properties/error/properties/invalid_scaling_mode",
+                    "type": ["string", "null"]
+                },
+                "invalid_display_mode": {
+                    "$id": "#/properties/error/properties/invalid_display_mode",
                     "type": ["string", "null"]
                 },
                 "entity_invalid": {
@@ -139,7 +144,9 @@
                 "show_warning_times",
                 "error",
                 "scaling_mode",
-                "scaling_mode_options"
+                "scaling_mode_options",
+                "display_mode",
+                "display_mode_options"
             ],
             "properties": {
                 "entity": {
@@ -289,6 +296,29 @@
                         },
                         "headline_and_scale": {
                             "$id": "#/properties/editor/properties/scaling_mode_options/properties/headline_and_scale",
+                            "type": ["string", "null"]
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "display_mode": {
+                    "$id": "#/properties/editor/properties/display_mode",
+                    "type": ["string", "null"]
+                },
+                "display_mode_options": {
+                    "$id": "#/properties/editor/properties/display_mode_options",
+                    "type": "object",
+                    "required": [
+                        "card",
+                        "badge"
+                    ],
+                    "properties": {
+                        "card": {
+                            "$id": "#/properties/editor/properties/scaling_mode_options/properties/card",
+                            "type": ["string", "null"]
+                        },
+                        "badge": {
+                            "$id": "#/properties/editor/properties/scaling_mode_options/properties/badge",
                             "type": ["string", "null"]
                         }
                     },

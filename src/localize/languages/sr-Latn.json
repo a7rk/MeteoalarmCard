@@ -17,6 +17,7 @@
     "missing_entity": "Potrebno je navesti entitete!",
     "invalid_integration": "Ova integracija nije važeća!",
     "invalid_scaling_mode": "Ovaj režim skaliranja nije važeći!",
+    "invalid_display_mode": null,
     "entity_invalid": {
       "single": "Izabrana integracija ne odgovara izabranom entitetu.",
       "multiple": "Izabrana integracija ne odgovara izabranim entitetima: {entity}."
@@ -55,6 +56,11 @@
       "headline": "Samo naslov",
       "scale": "Samo skala",
       "headline_and_scale": "Naslov i skala"
+    },
+    "display_mode": null,
+    "display_mode_options": {
+      "card": null,
+      "badge": null
     },
     "show_warning_times": null
   },
