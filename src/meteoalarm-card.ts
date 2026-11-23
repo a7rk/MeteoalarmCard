@@ -684,17 +684,16 @@ export class MeteoalarmCard extends LitElement {
 			${
 				this.displayMode !== MeteoalarmDisplayMode.Badge
 					? html`
-				
-			${
-				suffixIcon
-					? html`
-							<ha-icon
+							${
+								suffixIcon
+									? html`
+											<ha-icon
 												class="caption-icon caption-icon-suffix"
 												icon="mdi:${suffixIcon}"
 											></ha-icon>
-						`
-					: ''
-			}
+										`
+									: ''
+							}
 						`
 					: ''
 			}

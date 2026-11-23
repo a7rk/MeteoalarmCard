@@ -59,13 +59,21 @@
       "event": "wind",
       "level": "orange",
       "headline": "Orange storm warning from Mon, 27.03.2023 08:00 until Mon, 27.03.2023 18:00",
-      "kind": "current"
+      "kind": "current",
+      "timing": {
+        "end": "2023-03-27T16:00:00+00:00",
+        "start": "2023-03-27T06:00:00+00:00"
+      }
     },
     {
       "event": "high_temperature",
       "level": "yellow",
       "headline": "Enhanced heat stress can be expected.",
-      "kind": "current"
+      "kind": "current",
+      "timing": {
+        "end": "2023-03-27T21:59:00+00:00",
+        "start": "2023-03-26T22:00:00+00:00"
+      }
     }
   ]
 }
