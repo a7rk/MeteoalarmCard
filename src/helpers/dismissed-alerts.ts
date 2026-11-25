@@ -1,12 +1,12 @@
 const KEY_PREFIX = 'meteoalarm-card:dismissed';
 
-function storageKey(userId: string | undefined, entityIds: string[]): string {
-	return [KEY_PREFIX, userId ?? 'anonymous', [...entityIds].sort().join(',')].join(':');
+function storageKey(userId: string | undefined, scope: string[]): string {
+	return [KEY_PREFIX, userId ?? 'anonymous', [...scope].sort().join(',')].join(':');
 }
 
-export function loadDismissedAlerts(userId: string | undefined, entityIds: string[]): string[] {
+export function loadDismissedAlerts(userId: string | undefined, scope: string[]): string[] {
 	try {
-		const parsed = JSON.parse(localStorage.getItem(storageKey(userId, entityIds)) ?? '[]');
+		const parsed = JSON.parse(localStorage.getItem(storageKey(userId, scope)) ?? '[]');
 		return Array.isArray(parsed) ? parsed.filter((id) => typeof id === 'string') : [];
 	} catch {
 		return [];
@@ -15,11 +15,11 @@ export function loadDismissedAlerts(userId: string | undefined, entityIds: strin
 
 export function saveDismissedAlerts(
 	userId: string | undefined,
-	entityIds: string[],
+	scope: string[],
 	ids: string[],
 ): void {
 	try {
-		const key = storageKey(userId, entityIds);
+		const key = storageKey(userId, scope);
 		if (ids.length == 0) {
 			localStorage.removeItem(key);
 		} else {

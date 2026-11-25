@@ -187,7 +187,7 @@ export class MeteoalarmCard extends LitElement {
 
 		if (!this.dismissedLoaded) {
 			this.dismissedLoaded = true;
-			this.dismissedIds = loadDismissedAlerts(this.hass.user?.id, this.entityIds);
+			this.dismissedIds = loadDismissedAlerts(this.hass.user?.id, this.dismissedScope);
 		}
 		this.forgetEndedAlerts();
 	}
@@ -213,7 +213,7 @@ export class MeteoalarmCard extends LitElement {
 
 	private setDismissedIds(ids: string[]): void {
 		this.dismissedIds = ids;
-		saveDismissedAlerts(this.hass.user?.id, this.entityIds, ids);
+		saveDismissedAlerts(this.hass.user?.id, this.dismissedScope, ids);
 	}
 
 	private dismissCurrentAlert(confirmation?: boolean | { text?: string }): void {
@@ -393,7 +393,10 @@ export class MeteoalarmCard extends LitElement {
 		}
 	}
 
-	private get entityIds(): string[] {
+	// Action-backed integrations only use their entities as refresh triggers, so
+	// the config entry id alone identifies the source of the alerts
+	private get dismissedScope(): string[] {
+		if (this.config.config_entry_id) return [this.config.config_entry_id];
 		return processConfigEntities(this.config.entities!).map((e) => e.entity);
 	}
 
@@ -681,8 +684,8 @@ export class MeteoalarmCard extends LitElement {
 				.type="button"
 				@action=${this.handleAction}
 				.actionHandler=${actionHandler({
-					hasHold: hasAction(this.config!.hold_action),
-					hasDoubleClick: hasAction(this.config!.double_tap_action),
+					hasHold: hasAction(this.config.hold_action as ActionConfig | undefined),
+					hasDoubleClick: hasAction(this.config.double_tap_action as ActionConfig | undefined),
 				})}
 				.label=${badgeLabel}
 				style=${styleMap(style)}

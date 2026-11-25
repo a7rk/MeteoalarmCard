@@ -116,7 +116,7 @@ override_headline: false
 ```
 The `config_entry_id` can be selected in the card editor or copied from `Settings` -> `Devices & Services` -> `GeoSphere Austria Warnings` -> the location's menu -> `Copy entry ID`.
 
-For this integration, `tap_action` defaults to `none`. The card reloads the warnings whenever one of the listed entities updates, so use the `*_active_warning_level` and `*_advance_warning_level` sensors.
+For this integration, `tap_action` defaults to `none`. Set `tap_action: { action: dismiss }` to be able to hide acknowledged warnings, see [Dismissing warnings](#dismissing-warnings). The card reloads the warnings whenever one of the listed entities updates, so use the `*_active_warning_level` and `*_advance_warning_level` sensors.
 
 ## Supported languages
 
