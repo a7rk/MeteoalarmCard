@@ -67,7 +67,8 @@ export default class GeoSphereAustria implements MeteoalarmIntegration {
 			monitoredConditions: [
 				MeteoalarmEventType.Wind,
 				MeteoalarmEventType.Rain,
-				MeteoalarmEventType.SnowIce,
+				MeteoalarmEventType.Snow,
+				MeteoalarmEventType.BlackIce,
 				MeteoalarmEventType.Thunderstorms,
 				MeteoalarmEventType.HighTemperature,
 				MeteoalarmEventType.LowTemperature,
@@ -232,8 +233,8 @@ export default class GeoSphereAustria implements MeteoalarmIntegration {
 		const warningTypes: Record<string, MeteoalarmEventType> = {
 			storm: MeteoalarmEventType.Wind,
 			rain: MeteoalarmEventType.Rain,
-			snow: MeteoalarmEventType.SnowIce,
-			black_ice: MeteoalarmEventType.SnowIce,
+			snow: MeteoalarmEventType.Snow,
+			black_ice: MeteoalarmEventType.BlackIce,
 			thunderstorm: MeteoalarmEventType.Thunderstorms,
 			heat: MeteoalarmEventType.HighTemperature,
 			cold: MeteoalarmEventType.LowTemperature,
