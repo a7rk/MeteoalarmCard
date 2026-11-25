@@ -1,6 +1,8 @@
 import {
+	ActionConfig,
 	ActionHandlerEvent,
 	EntityConfig,
+	fireEvent,
 	handleAction,
 	hasAction,
 	hasConfigOrEntityChanged,
@@ -19,6 +21,7 @@ import swiperPaginationCss from 'swiper/css/pagination?inline';
 import { version as CARD_VERSION } from '../package.json';
 import EventsParser from './events-parser';
 import { actionHandler } from './helpers/action-handler-directive';
+import { loadDismissedAlerts, saveDismissedAlerts } from './helpers/dismissed-alerts';
 import { processConfigEntities } from './helpers/process-config-entities';
 import INTEGRATIONS from './integrations/integrations';
 import { localize } from './localize/localize';
@@ -26,6 +29,7 @@ import { getCanvasFont, getTextWidth } from './measure-text';
 import styles from './styles';
 import {
 	DEFAULT_SCALING_MODE,
+	MeteoalarmActionConfig,
 	MeteoalarmCardConfig,
 	MeteoalarmIntegration,
 	MeteoalarmIntegrationEntityType,
@@ -55,6 +59,10 @@ export class MeteoalarmCard extends LitElement {
 	@property({ attribute: false }) public hass!: HomeAssistant;
 
 	@state() private config!: MeteoalarmCardConfig;
+
+	@state() private dismissedIds: string[] = [];
+
+	private dismissedLoaded = false;
 
 	private resizeObserver!: ResizeObserver;
 
@@ -171,7 +179,66 @@ export class MeteoalarmCard extends LitElement {
 			return true;
 		}
 
-		return hasConfigOrEntityChanged(this, changedProps, false);
+		return changedProps.has('dismissedIds') || hasConfigOrEntityChanged(this, changedProps, false);
+	}
+
+	protected willUpdate(): void {
+		if (!this.hass || !this.config) return;
+
+		if (!this.dismissedLoaded) {
+			this.dismissedLoaded = true;
+			this.dismissedIds = loadDismissedAlerts(this.hass.user?.id, this.entityIds);
+		}
+		this.forgetEndedAlerts();
+	}
+
+	// Forget dismissed alerts that are no longer reported, so they show again if they return
+	private forgetEndedAlerts(): void {
+		if (this.dismissedIds.length == 0) return;
+		try {
+			const currentIds = new EventsParser(this.integration).getAlertIds(
+				this.entities,
+				this.config.ignored_levels,
+				this.config.ignored_events,
+			);
+			if (currentIds === undefined) return;
+			const remaining = this.dismissedIds.filter((id) => currentIds.includes(id));
+			if (remaining.length != this.dismissedIds.length) {
+				this.setDismissedIds(remaining);
+			}
+		} catch {
+			// Invalid configuration or data is reported by render()
+		}
+	}
+
+	private setDismissedIds(ids: string[]): void {
+		this.dismissedIds = ids;
+		saveDismissedAlerts(this.hass.user?.id, this.entityIds, ids);
+	}
+
+	private dismissCurrentAlert(confirmation?: boolean | { text?: string }): void {
+		const slide =
+			this.swiper?.slides[this.swiper.realIndex] ?? this.shadowRoot?.querySelector('.swiper-slide');
+		const id = slide?.getAttribute('alert_id');
+		if (!id || this.dismissedIds.includes(id)) return;
+
+		if (confirmation !== false) {
+			const text =
+				typeof confirmation === 'object' && confirmation.text
+					? confirmation.text
+					: localize('common.dismiss_confirmation');
+			if (!window.confirm(text)) return;
+		}
+
+		this.setDismissedIds([...this.dismissedIds, id]);
+		fireEvent(this, 'hass-notification' as any, {
+			message: localize('common.dismissed'),
+			duration: 6000,
+			action: {
+				text: localize('common.undo'),
+				action: () => this.setDismissedIds(this.dismissedIds.filter((x) => x != id)),
+			},
+		});
 	}
 
 	protected updated(changedProps: PropertyValues): void {
@@ -324,6 +391,10 @@ export class MeteoalarmCard extends LitElement {
 			narrow.style.display = 'none';
 			veryNarrow.style.display = 'none';
 		}
+	}
+
+	private get entityIds(): string[] {
+		return processConfigEntities(this.config.entities!).map((e) => e.entity);
 	}
 
 	private get entities(): HassEntity[] {
@@ -480,6 +551,7 @@ export class MeteoalarmCard extends LitElement {
 				this.config.show_warning_times,
 				this.config.ignored_levels,
 				this.config.ignored_events,
+				this.dismissedIds,
 				this.hass.locale?.language ?? this.hass.language,
 			);
 
@@ -504,8 +576,8 @@ export class MeteoalarmCard extends LitElement {
 				<ha-card
 					@action=${this.handleAction}
 					.actionHandler=${actionHandler({
-						hasHold: hasAction(this.config.hold_action),
-						hasDoubleClick: hasAction(this.config.double_tap_action),
+						hasHold: hasAction(this.config.hold_action as ActionConfig | undefined),
+						hasDoubleClick: hasAction(this.config.double_tap_action as ActionConfig | undefined),
 					})}
 					tabindex="0"
 				>
@@ -520,6 +592,7 @@ export class MeteoalarmCard extends LitElement {
 										<div
 											class="swiper-slide ${event.cssClass}"
 											entity_id=${ifDefined(event.entity?.entity_id)}
+											alert_id=${ifDefined(event.id)}
 											style=${styleMap(this.getCardStyle(event.cssClass))}
 										>
 											<div class="content">
@@ -718,12 +791,18 @@ export class MeteoalarmCard extends LitElement {
 	}
 
 	private handleAction(ev: ActionHandlerEvent): void {
+		if (!this.hass || !this.config || !ev.detail.action) return;
+
+		const action = this.config[`${ev.detail.action}_action`] as MeteoalarmActionConfig | undefined;
+		if (action?.action === 'dismiss') {
+			this.dismissCurrentAlert(action.confirmation);
+			return;
+		}
+
 		const config = this.integration.getActionEntities
 			? this.config
 			: { ...this.config, entity: this.currentEntity };
 
-		if (this.hass && this.config && ev.detail.action) {
-			handleAction(this, this.hass, config, ev.detail.action);
-		}
+		handleAction(this, this.hass, config as any, ev.detail.action);
 	}
 }

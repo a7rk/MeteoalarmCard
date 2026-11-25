@@ -31,16 +31,16 @@ class EventsParser {
 		showWarningTimes = false,
 		ignoredLevels: string[] = [],
 		ignoredEvents: string[] = [],
+		dismissedIds: string[] = [],
 		locale = 'en',
 	): MeteoalarmAlertParsed[] {
 		if (this.isAnyEntityUnavailable(entities)) {
 			return [PredefinedCards.unavailableCard()];
 		}
-		this.checkIfIntegrationSupportsEntities(entities);
 
-		let alerts = this.sortAlerts(this.graterAllAlerts(entities));
-		this.validateAlert(alerts);
-		alerts = this.filterAlerts(alerts, ignoredLevels, ignoredEvents);
+		const alerts = this.collectAlerts(entities, ignoredLevels, ignoredEvents).filter(
+			(alert) => !dismissedIds.includes(EventsParser.alertId(alert)),
+		);
 
 		const result: MeteoalarmAlertParsed[] = [];
 		for (const alert of alerts) {
@@ -60,6 +60,7 @@ class EventsParser {
 				: formatWarningCaption(alert, showWarningTimes, now, locale);
 
 			result.push({
+				id: EventsParser.alertId(alert),
 				isActive: true,
 				entity: alert._entity!,
 				icon: event.icon,
@@ -78,6 +79,34 @@ class EventsParser {
 		}
 
 		return disableSweeper ? result.slice(0, 1) : result;
+	}
+
+	/**
+	 * Ids of all alerts that are currently reported, including dismissed ones.
+	 * Returns undefined when the entities are unavailable and nothing can be said about alerts.
+	 */
+	public getAlertIds(
+		entities: HassEntity[],
+		ignoredLevels: string[] = [],
+		ignoredEvents: string[] = [],
+	): string[] | undefined {
+		if (this.isAnyEntityUnavailable(entities)) return undefined;
+		return this.collectAlerts(entities, ignoredLevels, ignoredEvents).map(EventsParser.alertId);
+	}
+
+	public static alertId(alert: MeteoalarmAlert): string {
+		return [alert._entity?.entity_id, alert.event, alert.level, alert.headline ?? ''].join('|');
+	}
+
+	private collectAlerts(
+		entities: HassEntity[],
+		ignoredLevels: string[],
+		ignoredEvents: string[],
+	): MeteoalarmAlert[] {
+		this.checkIfIntegrationSupportsEntities(entities);
+		const alerts = this.sortAlerts(this.graterAllAlerts(entities));
+		this.validateAlert(alerts);
+		return this.filterAlerts(alerts, ignoredLevels, ignoredEvents);
 	}
 
 	/**
