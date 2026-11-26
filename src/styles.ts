@@ -8,11 +8,12 @@ export default css`
 
 		--text-color: inherit;
 		--text-color-active: white;
+		--text-contrast-color-active: rgb(from black r g b / 0.8);
 		--headline-font-size: 22px;
 		--caption-font-size: 13px;
 
 		--inactive-background-color: inherit;
-		--red-level-color: var(---error-color, #db4437);
+		--red-level-background-color: var(---error-color, #db4437);
 		--orange-level-background-color: #ee5a24;
 		--yellow-level-background-color: var(--warning-color, #ffa600);
 
@@ -95,8 +96,8 @@ export default css`
 		display: none;
 	}
 
-	.event-red {
-		background-color: var(--red-level-color);
+	/*	.event-red {
+		background-color: var(--red-level-background-color);
 	}
 
 	.event-orange {
@@ -105,7 +106,7 @@ export default css`
 
 	.event-yellow {
 		background-color: var(--yellow-level-background-color);
-	}
+	}*/
 
 	.event-red,
 	.event-orange,

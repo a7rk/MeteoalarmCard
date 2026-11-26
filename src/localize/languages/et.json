@@ -13,6 +13,7 @@
     "missing_entity": "Vajalik on Meteoalarmi olem!",
     "invalid_integration": "Meteoalarmi sidumine on vale!",
     "invalid_scaling_mode": "Skaleerimisviga",
+    "invalid_display_mode": null,
     "entity_invalid": {
       "single": "Skaleerimisviga",
       "multiple": "Skaleerimisvead"
@@ -47,6 +48,11 @@
       "headline": "päis",
       "scale": "suurus",
       "headline_and_scale": "päis ja suurus"
+    },
+    "display_mode": null,
+    "display_mode_options": {
+      "card": null,
+      "badge": null
     }
   },
   "events": {

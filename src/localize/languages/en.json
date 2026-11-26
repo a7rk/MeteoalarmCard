@@ -13,6 +13,7 @@
     "missing_entity": "Specifying entities is required!",
     "invalid_integration": "This integration is not valid!",
     "invalid_scaling_mode": "This scaling mode is not valid!",
+    "invalid_display_mode": "This display mode is not valid!",
     "entity_invalid": {
       "single": "Selected integration doesn't match selected entity.",
       "multiple": "Selected integration doesn't match selected entities: {entity}."
@@ -47,6 +48,11 @@
       "headline": "Headline Only",
       "scale": "Scale Only",
       "headline_and_scale": "Headline and scale"
+    },
+    "display_mode": "Card Layout",
+    "display_mode_options": {
+      "card": "Card",
+      "badge": "Badge"
     }
   },
   "events": {
