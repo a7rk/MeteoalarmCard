@@ -658,14 +658,13 @@ export class MeteoalarmCard extends LitElement {
 		const badgeClass = topEvent.cssClass ?? 'event-none';
 		const level = this.getSeverityLevel(badgeClass);
 
-		const badgeLabel =
-			topEvent.caption && topEvent.captionSuffixIcon
-				? html`
-						<span class="badge-caption">
-							${this.renderCaption(topEvent.captionPrefixText, topEvent.caption, topEvent.captionSuffixIcon)}
-						</span>
-					`
-				: '';
+		const badgeLabel = topEvent.caption
+			? html`
+					<span class="badge-caption" style="display: flex; align-items: center;">
+						${this.renderCaption(topEvent.captionPrefixText, topEvent.caption, topEvent.captionSuffixIcon)}
+					</span>
+				`
+			: '';
 
 		// <ha-badge> has its own shadow-root hence custom css styles best defined inline
 		// using styleMap(). Yellow badges need a dark contrast color since its background is light;
@@ -755,7 +754,6 @@ export class MeteoalarmCard extends LitElement {
 					? html` <span class="caption-text caption-prefix">${prefixText}&nbsp;</span> `
 					: ''
 			}
-
 			<span class="caption-text">${caption}</span>
 			${
 				this.displayMode !== MeteoalarmDisplayMode.Badge
